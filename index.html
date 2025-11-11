@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ADITYA DON - TERMUX SERVER</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        .terminal {
+            background: #001100;
+            border: 2px solid #00FF00;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 0 20px #00FF00;
+        }
+        .header {
+            color: #FF0000;
+            font-size: 48px;
+            text-align: center;
+            text-shadow: 0 0 10px #FF0000;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .command {
+            color: #00FFFF;
+            margin: 10px 0;
+        }
+        .prompt {
+            color: #00FF00;
+        }
+        .output {
+            color: #FFFF00;
+            margin-left: 20px;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="header">ADITYA DON</div>
+        
+        <div class="command">
+            <span class="prompt">root@aditya-don:~$</span> whoami
+        </div>
+        <div class="output">aditya_don</div>
+        
+        <div class="command">
+            <span class="prompt">root@aditya-don:~$</span> hostname
+        </div>
+        <div class="output">aditya-don-server</div>
+        
+        <div class="command">
+            <span class="prompt">root@aditya-don:~$</span> status --server
+        </div>
+        <div class="output">✅ SERVER STATUS: <span style="color:#00FF00">RUNNING</span></div>
+        <div class="output">🌐 PUBLIC URL: https://er-bizi.onrender.com</div>
+        <div class="output">🕒 UPTIME: 24/7 ACTIVE</div>
+        
+        <div class="command">
+            <span class="prompt">root@aditya-don:~$</span> cat about.txt
+        </div>
+        <div class="output">Name: Aditya Don</div>
+        <div class="output">Skills: Python, Termux, Server Management</div>
+        <div class="output">Server: Custom Termux Server</div>
+        
+        <div class="command">
+            <span class="prompt">root@aditya-don:~$</span> _<span class="blink">▊</span>
+        </div>
+    </div>
+    
+    <div class="footer">
+        © 2025 ADITYA DON - TERMUX SERVER | Powered by Render
+    </div>
+</body>
+</html>
