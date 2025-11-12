@@ -3,245 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADITYA DON - Professional Termux Developer</title>
-    <meta name="description" content="ADITYA DON - Professional Termux Developer, Python Programmer, TikTok: TT-ADITYA EDITZ, Facebook: ADITYA EDITZ. Server Management & Automation Expert.">
-    <meta name="keywords" content="aditya don, termux developer, python programmer, tt-aditya editz, aditya editz, server management">
+    <title>Aditya Don - Python Developer</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        body {
-            background: #000000;
-            color: #00FF00;
             font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c2e, #1a1a4a, #2d2d6e);
+            color: #00f3ff;
+            min-height: 100vh;
+            position: relative;
             overflow-x: hidden;
-            background: linear-gradient(45deg, #000000, #001100, #000000);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            padding: 20px;
         }
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50% }
-            50% { background-position: 100% 50% }
-            100% { background-position: 0% 50% }
+
+        .glow-effect {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 195, 255, 0.4) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
         }
-        
+
+        .glow-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .glow-2 { top: 60%; right: 10%; animation-delay: 2s; }
+        .glow-3 { bottom: 20%; left: 20%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+
         .terminal {
-            background: rgba(0, 20, 0, 0.9);
-            border: 2px solid #00FF00;
-            border-radius: 15px;
-            padding: 30px;
+            background: rgba(10, 10, 40, 0.8);
+            border: 1px solid #00f3ff;
+            border-radius: 10px;
+            padding: 20px;
             margin: 20px auto;
-            max-width: 900px;
-            box-shadow: 0 0 30px #00FF00, 0 0 60px #00FF00;
+            max-width: 800px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
             backdrop-filter: blur(10px);
-            animation: glow 2s ease-in-out infinite alternate;
         }
-        
-        @keyframes glow {
-            from { box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00; }
-            to { box-shadow: 0 0 30px #00FF00, 0 0 60px #00FF00, 0 0 80px #00FF00; }
-        }
-        
+
         .header {
-            color: #FF0000;
-            font-size: 3.5em;
             text-align: center;
-            text-shadow: 0 0 20px #FF0000;
             margin-bottom: 30px;
-            font-weight: bold;
-            animation: textGlow 1.5s ease-in-out infinite alternate;
         }
-        
-        @keyframes textGlow {
-            from { text-shadow: 0 0 10px #FF0000; }
-            to { text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000; }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00ff88;
+            margin-bottom: 10px;
         }
-        
-        .command {
-            color: #00FFFF;
-            margin: 15px 0;
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
+
+        .header h2 {
+            color: #00f3ff;
+            font-size: 1.5em;
         }
-        
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        
-        .prompt {
-            color: #00FF00;
-            font-weight: bold;
-        }
-        
-        .output {
-            color: #FFFF00;
-            margin-left: 20px;
-            animation: slideIn 0.5s ease;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .blink {
-            animation: blink 1s infinite;
-            color: #00FF00;
-            font-weight: bold;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
+
         .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin: 20px 0;
         }
-        
-        .skill-tag {
-            background: #003300;
-            color: #00FF00;
+
+        .skill-item {
+            background: rgba(0, 243, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00ff88;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .skill-item:hover {
+            background: rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .status-box {
+            background: rgba(0, 20, 40, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .project-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .music-player {
+            background: rgba(0, 20, 40, 0.9);
+            border: 1px solid #ff00ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .music-btn {
+            background: #00ff88;
+            color: #000;
+            border: none;
             padding: 8px 15px;
             border-radius: 20px;
-            border: 1px solid #00FF00;
-            animation: pulse 2s infinite;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+        .music-btn:hover {
+            background: #00f3ff;
+            transform: scale(1.05);
         }
-        
+
+        .volume-slider {
+            width: 100px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 243, 255, 0.2);
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #00ff88;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
         .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 30px;
             color: #888;
             font-size: 0.9em;
         }
-        
-        .music-player {
-            text-align: center;
-            margin: 20px 0;
-            color: #00FFFF;
-            padding: 10px;
-            background: rgba(0, 50, 0, 0.5);
-            border-radius: 10px;
-            border: 1px solid #00FFFF;
+
+        .song-info {
+            margin: 10px 0;
+            color: #ff00ff;
+            font-weight: bold;
         }
-        
-        .social-links {
-            text-align: center;
-            margin: 15px 0;
-            color: #FF00FF;
-        }
-        
-        /* Obfuscated CSS */
-        ._a1 { animation-delay: 0.1s; }
-        ._a2 { animation-delay: 0.3s; }
-        ._a3 { animation-delay: 0.5s; }
-        ._a4 { animation-delay: 0.7s; }
-        ._a5 { animation-delay: 0.9s; }
     </style>
 </head>
 <body>
-    <!-- Encrypted Content -->
+    <div class="glow-effect glow-1"></div>
+    <div class="glow-effect glow-2"></div>
+    <div class="glow-effect glow-3"></div>
+
     <div class="terminal">
-        <div class="header">ADITYA DON</div>
-        
-        <div class="command _a1">
-            <span class="prompt">root@aditya-don:~$</span> whoami
+        <div class="header">
+            <h1>ADITYA DON</h1>
+            <h2>Python Developer & Linux Administrator</h2>
         </div>
-        <div class="output _a1">aditya_don</div>
-        
-        <div class="command _a2">
-            <span class="prompt">root@aditya-don:~$</span> cat about_me.txt
+
+        <div class="skills">
+            <div class="skill-item">Termux Automation</div>
+            <div class="skill-item">Server Management</div>
+            <div class="skill-item">Web Development</div>
+            <div class="skill-item">Bot Development</div>
+            <div class="skill-item">Linux Administration</div>
         </div>
-        <div class="output _a2">🔥 <strong>ADITYA DON</strong> - Professional Developer</div>
-        <div class="output _a2">🎯 <strong>Specialization:</strong> Termux Automation, Python Development</div>
-        <div class="output _a2">🚀 <strong>Expertise:</strong> Server Management, Web Development, Bot Creation</div>
-        <div class="output _a2">💻 <strong>Projects:</strong> Custom Servers, Automation Tools, Web Applications</div>
-        
-        <div class="social-links _a2">
-            📱 <strong>TikTok:</strong> TT-ADITYA EDITZ | 
-            👥 <strong>Facebook:</strong> ADITYA EDITZ
+
+        <div class="status-box">
+            <strong>root@aditya-don:~$ status -- projects</strong>
+            <div class="project-item">
+                <input type="checkbox" id="project1">
+                <label for="project1">Python Bot Server: https://er-bizi.onrender.com</label>
+            </div>
+            <div class="project-item">
+                <input type="checkbox" id="project2" checked>
+                <label for="project2">Personal Website: https://aditya-don-website.onrender.com</label>
+            </div>
+            <div class="project-item">
+                <input type="checkbox" id="project3">
+                <label for="project3">Status: All Systems Operational</label>
+            </div>
+            <div class="project-item">
+                <input type="checkbox" id="project4">
+                <label for="project4">Security: Code Protected & Encrypted</label>
+            </div>
         </div>
-        
-        <div class="command _a3">
-            <span class="prompt">root@aditya-don:~$</span> skills --show
-        </div>
-        <div class="skills _a3">
-            <div class="skill-tag">Python Programming</div>
-            <div class="skill-tag">Termux Automation</div>
-            <div class="skill-tag">Server Management</div>
-            <div class="skill-tag">Web Development</div>
-            <div class="skill-tag">Bot Development</div>
-            <div class="skill-tag">Linux Administration</div>
-        </div>
-        
-        <div class="command _a4">
-            <span class="prompt">root@aditya-don:~$</span> status --projects
-        </div>
-        <div class="output _a4">✅ <strong>Python Bot Server:</strong> https://er-bizi.onrender.com</div>
-        <div class="output _a4">✅ <strong>Personal Website:</strong> https://aditya-don-website.onrender.com</div>
-        <div class="output _a4">🕒 <strong>Status:</strong> All Systems Operational</div>
-        <div class="output _a4">🔒 <strong>Security:</strong> Code Protected & Encrypted</div>
-        
+
         <div class="music-player">
-            🎵 Now Playing: <strong>We Don't Talk Anymore - Charlie Puth</strong>
-            <br>🔊 Music: Auto Play | Volume: 30%
+            <div class="song-info">
+                🎵 Now Playing: Your Hindi Song
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="time-display">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+
+            <div class="music-controls">
+                <button class="music-btn" onclick="playMusic()">▶ Play</button>
+                <button class="music-btn" onclick="pauseMusic()">⏸ Pause</button>
+                <button class="music-btn" onclick="stopMusic()">⏹ Stop</button>
+                <input type="range" class="volume-slider" id="volume" min="0" max="100" value="30" onchange="setVolume(this.value)">
+                <span>Volume: <span id="volume-value">30%</span></span>
+            </div>
+            
+            <div style="margin-top: 10px; font-size: 0.8em; color: #00ff88;">
+                ✅ Music Loaded Successfully!
+            </div>
         </div>
-        
-        <div class="command _a5">
-            <span class="prompt">root@aditya-don:~$</span> _<span class="blink">▊</span>
+
+        <div class="footer">
+            <p>© 2025 ADITYA DON - TT-ADITYA EDITZ | FB-ADITYA EDITZ | Codec Protected</p>
         </div>
-    </div>
-    
-    <div class="footer">
-        © 2025 <strong>ADITYA DON</strong> - TT-ADITYA EDITZ | FB-ADITYA EDITZ | 🔒 Code Protected
     </div>
 
-    <!-- Background Music - We Don't Talk Anymore -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        <!-- Note: Replace with actual song URL for real music -->
+    <audio id="bg-music">
+        <!-- Your Google Drive MP3 Link -->
+        <source src="https://drive.google.com/uc?export=download&id=1XxQZtJOLW59Rn2grGigubqkFbWJWlad-" type="audio/mpeg">
+        Your browser does not support the audio element.
     </audio>
 
-    <!-- Encrypted JavaScript -->
     <script>
-        // Obfuscated Typewriter Effect
-        (function(){
-            var _0xaditya=['\x64\x65\x6c\x61\x79','\x63\x6f\x6d\x6d\x61\x6e\x64','\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c','\x6c\x65\x6e\x67\x74\x68','\x66\x6f\x72\x45\x61\x63\x68','\x73\x74\x79\x6c\x65','\x6f\x70\x61\x63\x69\x74\x79','\x73\x65\x74\x54\x69\x6d\x65\x6f\x75\x74'];function _0xdon(_0x1a2b3d,_0x2c4d5e){return _0x1a2b3d+_0x2c4d5e;}window[_0xdon('\x6f','\x6e')+'load']=function(){var _0x3e4f5c=document[_0xdon('\x71\x75\x65\x72\x79\x53','\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c')]('\x2e'+_0xdon('\x63','\x6f\x6d\x6d\x61\x6e\x64'));var _0x5a6b7d=0;_0x3e4f5c[_0xdon('\x66','\x6f\x72\x45\x61\x63\x68')](function(_0x1c8d9f){setTimeout(function(){_0x1c8d9f[_0xdon('\x73','\x74\x79\x6c\x65')][_0xdon('\x6f','\x70\x61\x63\x69\x74\x79')]=1;},_0x5a6b7d*300);_0x5a6b7d++;});};
-        })();
-        
-        // Background Music Auto-Play
-        document.addEventListener('DOMContentLoaded', function() {
-            var audio = document.getElementById('bgMusic');
-            audio.volume = 0.3; // 30% volume
+        const audio = document.getElementById('bg-music');
+        const volumeSlider = document.getElementById('volume');
+        const volumeValue = document.getElementById('volume-value');
+        const progress = document.getElementById('progress');
+        const currentTime = document.getElementById('current-time');
+        const duration = document.getElementById('duration');
+
+        // Format time function
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Update progress bar
+        audio.addEventListener('timeupdate', function() {
+            const current = audio.currentTime;
+            const total = audio.duration;
             
-            // Auto-play with user interaction
-            function playMusic() {
-                audio.play().then(function() {
-                    console.log('Music started successfully');
-                }).catch(function(error) {
-                    console.log('Music play failed:', error);
-                });
+            if (total) {
+                const progressPercent = (current / total) * 100;
+                progress.style.width = progressPercent + '%';
+                currentTime.textContent = formatTime(current);
+                duration.textContent = formatTime(total);
             }
-            
-            // Start music on any user interaction
-            document.body.addEventListener('click', playMusic);
-            document.body.addEventListener('touchstart', playMusic);
-            document.body.addEventListener('keydown', playMusic);
-            
-            // Try auto-play after 2 seconds
-            setTimeout(playMusic, 2000);
+        });
+
+        function playMusic() {
+            audio.play().then(() => {
+                console.log("Music started playing!");
+            }).catch(error => {
+                console.log("Play error:", error);
+                alert('Music play nahi ho pa raha. Kya browser audio allow kar raha hai?');
+            });
+        }
+
+        function pauseMusic() {
+            audio.pause();
+        }
+
+        function stopMusic() {
+            audio.pause();
+            audio.currentTime = 0;
+            progress.style.width = '0%';
+            currentTime.textContent = '0:00';
+        }
+
+        function setVolume(value) {
+            audio.volume = value / 100;
+            volumeValue.textContent = value + '%';
+        }
+
+        // Initialize volume
+        audio.volume = 0.3;
+
+        // When audio loads
+        audio.addEventListener('loadeddata', function() {
+            console.log("Audio loaded successfully!");
+            duration.textContent = formatTime(audio.duration);
+        });
+
+        // Click on progress bar to seek
+        progress.parentElement.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
         });
     </script>
 </body>
