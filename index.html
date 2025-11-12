@@ -1,92 +1,248 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ADITYA DON - TERMUX SERVER</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADITYA DON - Professional Termux Developer</title>
+    <meta name="description" content="ADITYA DON - Professional Termux Developer, Python Programmer, TikTok: TT-ADITYA EDITZ, Facebook: ADITYA EDITZ. Server Management & Automation Expert.">
+    <meta name="keywords" content="aditya don, termux developer, python programmer, tt-aditya editz, aditya editz, server management">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background-color: #000000;
+            background: #000000;
             color: #00FF00;
             font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 20px;
             overflow-x: hidden;
+            background: linear-gradient(45deg, #000000, #001100, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+        
         .terminal {
-            background: #001100;
+            background: rgba(0, 20, 0, 0.9);
             border: 2px solid #00FF00;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 15px;
+            padding: 30px;
             margin: 20px auto;
-            max-width: 800px;
-            box-shadow: 0 0 20px #00FF00;
+            max-width: 900px;
+            box-shadow: 0 0 30px #00FF00, 0 0 60px #00FF00;
+            backdrop-filter: blur(10px);
+            animation: glow 2s ease-in-out infinite alternate;
         }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00; }
+            to { box-shadow: 0 0 30px #00FF00, 0 0 60px #00FF00, 0 0 80px #00FF00; }
+        }
+        
         .header {
             color: #FF0000;
-            font-size: 48px;
+            font-size: 3.5em;
             text-align: center;
-            text-shadow: 0 0 10px #FF0000;
-            margin-bottom: 20px;
+            text-shadow: 0 0 20px #FF0000;
+            margin-bottom: 30px;
             font-weight: bold;
+            animation: textGlow 1.5s ease-in-out infinite alternate;
         }
+        
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px #FF0000; }
+            to { text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000; }
+        }
+        
         .command {
             color: #00FFFF;
-            margin: 10px 0;
+            margin: 15px 0;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
         }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
         .prompt {
             color: #00FF00;
+            font-weight: bold;
         }
+        
         .output {
             color: #FFFF00;
             margin-left: 20px;
+            animation: slideIn 0.5s ease;
         }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
         .blink {
             animation: blink 1s infinite;
+            color: #00FF00;
+            font-weight: bold;
         }
+        
         @keyframes blink {
+            0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+        
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .skill-tag {
+            background: #003300;
+            color: #00FF00;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #00FF00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         .footer {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
             color: #888;
+            font-size: 0.9em;
         }
+        
+        .music-player {
+            text-align: center;
+            margin: 20px 0;
+            color: #00FFFF;
+            padding: 10px;
+            background: rgba(0, 50, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid #00FFFF;
+        }
+        
+        .social-links {
+            text-align: center;
+            margin: 15px 0;
+            color: #FF00FF;
+        }
+        
+        /* Obfuscated CSS */
+        ._a1 { animation-delay: 0.1s; }
+        ._a2 { animation-delay: 0.3s; }
+        ._a3 { animation-delay: 0.5s; }
+        ._a4 { animation-delay: 0.7s; }
+        ._a5 { animation-delay: 0.9s; }
     </style>
 </head>
 <body>
+    <!-- Encrypted Content -->
     <div class="terminal">
         <div class="header">ADITYA DON</div>
         
-        <div class="command">
+        <div class="command _a1">
             <span class="prompt">root@aditya-don:~$</span> whoami
         </div>
-        <div class="output">aditya_don</div>
+        <div class="output _a1">aditya_don</div>
         
-        <div class="command">
-            <span class="prompt">root@aditya-don:~$</span> hostname
+        <div class="command _a2">
+            <span class="prompt">root@aditya-don:~$</span> cat about_me.txt
         </div>
-        <div class="output">aditya-don-server</div>
+        <div class="output _a2">🔥 <strong>ADITYA DON</strong> - Professional Developer</div>
+        <div class="output _a2">🎯 <strong>Specialization:</strong> Termux Automation, Python Development</div>
+        <div class="output _a2">🚀 <strong>Expertise:</strong> Server Management, Web Development, Bot Creation</div>
+        <div class="output _a2">💻 <strong>Projects:</strong> Custom Servers, Automation Tools, Web Applications</div>
         
-        <div class="command">
-            <span class="prompt">root@aditya-don:~$</span> status --server
+        <div class="social-links _a2">
+            📱 <strong>TikTok:</strong> TT-ADITYA EDITZ | 
+            👥 <strong>Facebook:</strong> ADITYA EDITZ
         </div>
-        <div class="output">✅ SERVER STATUS: <span style="color:#00FF00">RUNNING</span></div>
-        <div class="output">🌐 PUBLIC URL: https://er-bizi.onrender.com</div>
-        <div class="output">🕒 UPTIME: 24/7 ACTIVE</div>
         
-        <div class="command">
-            <span class="prompt">root@aditya-don:~$</span> cat about.txt
+        <div class="command _a3">
+            <span class="prompt">root@aditya-don:~$</span> skills --show
         </div>
-        <div class="output">Name: Aditya Don</div>
-        <div class="output">Skills: Python, Termux, Server Management</div>
-        <div class="output">Server: Custom Termux Server</div>
+        <div class="skills _a3">
+            <div class="skill-tag">Python Programming</div>
+            <div class="skill-tag">Termux Automation</div>
+            <div class="skill-tag">Server Management</div>
+            <div class="skill-tag">Web Development</div>
+            <div class="skill-tag">Bot Development</div>
+            <div class="skill-tag">Linux Administration</div>
+        </div>
         
-        <div class="command">
+        <div class="command _a4">
+            <span class="prompt">root@aditya-don:~$</span> status --projects
+        </div>
+        <div class="output _a4">✅ <strong>Python Bot Server:</strong> https://er-bizi.onrender.com</div>
+        <div class="output _a4">✅ <strong>Personal Website:</strong> https://aditya-don-website.onrender.com</div>
+        <div class="output _a4">🕒 <strong>Status:</strong> All Systems Operational</div>
+        <div class="output _a4">🔒 <strong>Security:</strong> Code Protected & Encrypted</div>
+        
+        <div class="music-player">
+            🎵 Now Playing: <strong>We Don't Talk Anymore - Charlie Puth</strong>
+            <br>🔊 Music: Auto Play | Volume: 30%
+        </div>
+        
+        <div class="command _a5">
             <span class="prompt">root@aditya-don:~$</span> _<span class="blink">▊</span>
         </div>
     </div>
     
     <div class="footer">
-        © 2025 ADITYA DON - TERMUX SERVER | Powered by Render
+        © 2025 <strong>ADITYA DON</strong> - TT-ADITYA EDITZ | FB-ADITYA EDITZ | 🔒 Code Protected
     </div>
+
+    <!-- Background Music - We Don't Talk Anymore -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- Note: Replace with actual song URL for real music -->
+    </audio>
+
+    <!-- Encrypted JavaScript -->
+    <script>
+        // Obfuscated Typewriter Effect
+        (function(){
+            var _0xaditya=['\x64\x65\x6c\x61\x79','\x63\x6f\x6d\x6d\x61\x6e\x64','\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c','\x6c\x65\x6e\x67\x74\x68','\x66\x6f\x72\x45\x61\x63\x68','\x73\x74\x79\x6c\x65','\x6f\x70\x61\x63\x69\x74\x79','\x73\x65\x74\x54\x69\x6d\x65\x6f\x75\x74'];function _0xdon(_0x1a2b3d,_0x2c4d5e){return _0x1a2b3d+_0x2c4d5e;}window[_0xdon('\x6f','\x6e')+'load']=function(){var _0x3e4f5c=document[_0xdon('\x71\x75\x65\x72\x79\x53','\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c')]('\x2e'+_0xdon('\x63','\x6f\x6d\x6d\x61\x6e\x64'));var _0x5a6b7d=0;_0x3e4f5c[_0xdon('\x66','\x6f\x72\x45\x61\x63\x68')](function(_0x1c8d9f){setTimeout(function(){_0x1c8d9f[_0xdon('\x73','\x74\x79\x6c\x65')][_0xdon('\x6f','\x70\x61\x63\x69\x74\x79')]=1;},_0x5a6b7d*300);_0x5a6b7d++;});};
+        })();
+        
+        // Background Music Auto-Play
+        document.addEventListener('DOMContentLoaded', function() {
+            var audio = document.getElementById('bgMusic');
+            audio.volume = 0.3; // 30% volume
+            
+            // Auto-play with user interaction
+            function playMusic() {
+                audio.play().then(function() {
+                    console.log('Music started successfully');
+                }).catch(function(error) {
+                    console.log('Music play failed:', error);
+                });
+            }
+            
+            // Start music on any user interaction
+            document.body.addEventListener('click', playMusic);
+            document.body.addEventListener('touchstart', playMusic);
+            document.body.addEventListener('keydown', playMusic);
+            
+            // Try auto-play after 2 seconds
+            setTimeout(playMusic, 2000);
+        });
+    </script>
 </body>
 </html>
