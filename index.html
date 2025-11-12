@@ -146,10 +146,6 @@
             transform: scale(1.05);
         }
 
-        .music-btn:active {
-            transform: scale(0.95);
-        }
-
         .volume-slider {
             width: 100px;
         }
@@ -192,13 +188,27 @@
         }
 
         .click-notice {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff4444;
+            background: rgba(255, 255, 0, 0.2);
+            border: 1px solid #ffff00;
             border-radius: 5px;
             padding: 10px;
             margin: 10px 0;
             font-size: 0.9em;
-            color: #ff8888;
+            color: #ffff88;
+        }
+
+        .download-link {
+            margin: 10px 0;
+        }
+
+        .download-link a {
+            color: #00ff88;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .download-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -247,11 +257,10 @@
             </div>
             
             <div class="click-notice">
-                💡 <strong>Important:</strong> Pehle "Initialize Audio" button click karo, phir Play button
+                💡 <strong>Instructions:</strong> Pehle koi bhi button click karo, phir Play button
             </div>
             
             <div class="music-controls">
-                <button class="music-btn" onclick="initializeAudio()">🎵 Initialize Audio</button>
                 <button class="music-btn" onclick="playMusic()">▶ Play</button>
                 <button class="music-btn" onclick="pauseMusic()">⏸ Pause</button>
                 <button class="music-btn" onclick="stopMusic()">⏹ Stop</button>
@@ -267,8 +276,12 @@
             </div>
 
             <div class="music-controls">
-                <input type="range" class="volume-slider" id="volume" min="0" max="100" value="30" onchange="setVolume(this.value)">
-                <span>Volume: <span id="volume-value">30%</span></span>
+                <input type="range" class="volume-slider" id="volume" min="0" max="100" value="50" onchange="setVolume(this.value)">
+                <span>Volume: <span id="volume-value">50%</span></span>
+            </div>
+
+            <div class="download-link">
+                📥 <a href="https://drive.google.com/uc?export=download&id=1LnMdFZWUHdZfKZ4yp6B4M-nhnyBk0lTa" target="_blank">Direct Download MP3</a>
             </div>
             
             <div style="margin-top: 10px; font-size: 0.8em; color: #00ff88;">
@@ -281,9 +294,9 @@
         </div>
     </div>
 
-    <audio id="bg-music">
-        <!-- Your Google Drive MP3 Link -->
-        <source src="https://drive.google.com/uc?export=download&id=1XxQZtJOLW59Rn2grGigubqkFbWJWlad-" type="audio/mpeg">
+    <audio id="bg-music" preload="auto">
+        <!-- Your NEW Google Drive MP3 Link -->
+        <source src="https://drive.google.com/uc?export=download&id=1LnMdFZWUHdZfKZ4yp6B4M-nhnyBk0lTa" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -294,30 +307,15 @@
         const progress = document.getElementById('progress');
         const currentTime = document.getElementById('current-time');
         const duration = document.getElementById('duration');
-        
-        let audioInitialized = false;
+
+        let userInteracted = false;
 
         // Format time function
         function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
-        // Initialize audio on user interaction
-        function initializeAudio() {
-            if (!audioInitialized) {
-                // Create a silent audio context to unlock audio
-                const silentAudio = new Audio();
-                silentAudio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==";
-                silentAudio.play().then(() => {
-                    console.log("Audio initialized!");
-                    audioInitialized = true;
-                    alert('✅ Audio ready! Ab Play button click karo.');
-                }).catch(error => {
-                    console.log("Silent audio play failed:", error);
-                });
-            }
         }
 
         // Update progress bar
@@ -325,25 +323,51 @@
             const current = audio.currentTime;
             const total = audio.duration;
             
-            if (total) {
+            if (total && !isNaN(total)) {
                 const progressPercent = (current / total) * 100;
                 progress.style.width = progressPercent + '%';
                 currentTime.textContent = formatTime(current);
-                duration.textContent = formatTime(total);
+                
+                if (duration.textContent === "0:00") {
+                    duration.textContent = formatTime(total);
+                }
             }
         });
 
+        // Enable audio on any user interaction
+        function enableAudio() {
+            if (!userInteracted) {
+                userInteracted = true;
+                console.log("Audio enabled by user interaction");
+                
+                // Preload and play a silent sound to unlock audio
+                const silentAudio = new Audio();
+                silentAudio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==";
+                silentAudio.play().then(() => {
+                    silentAudio.pause();
+                    console.log("Audio context unlocked");
+                });
+            }
+        }
+
+        // Add event listeners for user interaction
+        document.addEventListener('click', enableAudio);
+        document.addEventListener('touchstart', enableAudio);
+        document.addEventListener('keydown', enableAudio);
+
         function playMusic() {
-            if (!audioInitialized) {
-                alert('❌ Pehle "Initialize Audio" button click karo!');
+            enableAudio();
+            
+            if (!userInteracted) {
+                alert('❌ Pehle koi bhi button click karo!');
                 return;
             }
-            
+
             audio.play().then(() => {
                 console.log("Music started playing!");
             }).catch(error => {
                 console.log("Play error:", error);
-                alert('❌ Music play nahi ho pa raha. Kya browser audio allow kar raha hai?\n\nSolution: Browser ke settings mein audio allow karo ya different browser try karo.');
+                alert('❌ Music play nahi ho pa raha. Kya browser audio allow kar raha hai?\n\nTry: Chrome browser use karo ya phone restart karo.');
             });
         }
 
@@ -364,32 +388,30 @@
         }
 
         // Initialize volume
-        audio.volume = 0.3;
+        audio.volume = 0.5;
 
         // When audio loads
         audio.addEventListener('loadeddata', function() {
             console.log("Audio loaded successfully!");
-            if (audio.duration) {
+            if (audio.duration && !isNaN(audio.duration)) {
                 duration.textContent = formatTime(audio.duration);
             }
         });
 
         // Click on progress bar to seek
         progress.parentElement.addEventListener('click', function(e) {
-            if (!audioInitialized) {
-                alert('Pehle "Initialize Audio" click karo!');
-                return;
-            }
+            enableAudio();
+            if (!userInteracted) return;
+            
             const rect = this.getBoundingClientRect();
             const percent = (e.clientX - rect.left) / rect.width;
             audio.currentTime = percent * audio.duration;
         });
 
-        // Try to initialize on any click
-        document.addEventListener('click', function() {
-            if (!audioInitialized) {
-                initializeAudio();
-            }
+        // Load audio metadata
+        audio.addEventListener('canplaythrough', function() {
+            console.log("Audio can play through");
+            duration.textContent = formatTime(audio.duration);
         });
     </script>
 </body>
