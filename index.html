@@ -3,101 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APNA MUSIC - Perfect Player</title>
+    <title>APNA MUSIC</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-theme">
-    <!-- Simple Loading -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <h2>APNA MUSIC</h2>
-            <p>Loading your music...</p>
-        </div>
-    </div>
-
-    <div class="main-content" id="mainContent">
-        <!-- Simple Header -->
-        <header class="simple-header">
-            <h1>🎵 APNA MUSIC</h1>
-            <p class="subtitle">By A_E</p>
-            
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">APNA <span>MUSIC</span></div>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search songs...">
-                <button onclick="searchMusic()">Search</button>
+                <input type="text" id="searchInput" placeholder="Search songs, artists...">
+                <button onclick="searchSongs()">🔍</button>
             </div>
-            
-            <button class="theme-btn" onclick="toggleTheme()">🌙</button>
         </header>
 
-        <!-- Modern Music Player -->
-        <div class="modern-player">
-            <!-- CD Style Album Art -->
-            <div class="cd-container">
-                <div class="cd">
-                    <img id="albumImage" src="https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=300&h=300&fit=crop" alt="Album">
-                    <div class="cd-hole"></div>
-                    <div class="cd-ring"></div>
+        <main>
+            <section class="trending-section" id="trendingSection">
+                <h2 class="section-title">Trending Music 🔥</h2>
+                <div class="songs-grid" id="trendingSongs">
+                    <!-- Songs load honge yaha -->
                 </div>
-                <div class="cd-shadow"></div>
+            </section>
+
+            <section class="search-results" id="searchResults">
+                <button class="back-button" onclick="showTrending()">← Back to Trending</button>
+                <h2 class="section-title">Search Results</h2>
+                <div class="songs-grid" id="searchResultsGrid">
+                    <!-- Search results yaha aayenge -->
+                </div>
+            </section>
+
+            <div class="loading" id="loading" style="display: none;">
+                Loading songs...
+            </div>
+        </main>
+    </div>
+
+    <div class="music-player" id="musicPlayer">
+        <div class="player-controls">
+            <div class="song-info">
+                <div class="song-image">🎵</div>
+                <div>
+                    <div class="song-title" id="nowPlayingTitle">Song Title</div>
+                    <div class="song-artist" id="nowPlayingArtist">Artist</div>
+                </div>
+            </div>
+            
+            <div class="control-buttons">
+                <button class="control-btn">⏮</button>
+                <button class="control-btn play-btn" id="playBtn">▶</button>
+                <button class="control-btn">⏭</button>
             </div>
 
-            <!-- Player Info -->
-            <div class="player-info">
-                <h2 id="songTitle" class="song-title">Select Song</h2>
-                <p id="artistName" class="artist-name">Artist Name</p>
-                
-                <!-- Progress -->
+            <div class="progress-bar">
                 <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress" id="progress"></div>
-                    </div>
-                    <div class="time">
-                        <span id="currentTime">0:00</span>
-                        <span id="duration">0:00</span>
-                    </div>
-                </div>
-
-                <!-- Modern Controls -->
-                <div class="modern-controls">
-                    <button class="control modern-btn" onclick="previousSong()">
-                        <span>⏮</span>
-                    </button>
-                    <button class="control play-btn modern-btn" onclick="togglePlay()" id="playBtn">
-                        <span>▶</span>
-                    </button>
-                    <button class="control modern-btn" onclick="nextSong()">
-                        <span>⏭</span>
-                    </button>
-                </div>
-
-                <!-- Volume -->
-                <div class="volume">
-                    <span>🔊</span>
-                    <input type="range" id="volume" min="0" max="1" step="0.1" value="0.8">
+                    <div class="progress" id="progress"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- Songs List - Simple -->
-        <div class="songs-section">
-            <h3>🎵 Recommended Songs</h3>
-            <div id="songContainer" class="songs-list">
-                <!-- Songs will appear here -->
-            </div>
-        </div>
-
-        <!-- Simple Lyrics -->
-        <div class="lyrics-box">
-            <h3>📜 Lyrics</h3>
-            <div id="lyrics" class="lyrics">
-                <p>Play a song to see lyrics</p>
+            <div class="volume-control">
+                <button class="control-btn">🔊</button>
             </div>
         </div>
     </div>
 
-    <audio id="audioPlayer"></audio>
     <script src="script.js"></script>
 </body>
 </html>
