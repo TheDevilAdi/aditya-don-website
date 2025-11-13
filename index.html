@@ -9,65 +9,46 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <header class="header">
+        <header>
             <div class="logo">
                 <i class="fas fa-music"></i>
-                <span>APNA MUSIC</span>
+                APNA MUSIC
             </div>
             
-            <!-- Navigation Menu -->
             <nav class="nav-menu">
                 <a href="#" class="nav-link active">Home</a>
                 <a href="#" class="nav-link">Profile</a>
                 <a href="#" class="nav-link">Contacts</a>
             </nav>
 
-            <!-- Search Bar -->
             <div class="search-container">
                 <div class="glowing-input">
-                    <input type="text" id="searchInput" placeholder="Search songs, artists...">
+                    <input type="text" id="searchInput" placeholder="Search any song...">
                     <span class="focus-border"></span>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <h1 class="section-title">Trending Now 🔥</h1>
-            
-            <!-- Songs Grid -->
-            <div class="songs-grid" id="trendingSongs">
-                <!-- Songs will load here -->
-            </div>
-
-            <!-- Lyrics Section -->
-            <div class="lyrics-container" id="lyricsContainer">
-                <h3>Now Playing</h3>
-                <div id="lyricsContent"></div>
-            </div>
-
-            <!-- Social Media -->
-            <div class="social-section">
-                <h3>Connect With Us</h3>
-                <div class="social-container">
-                    <div class="icon facebook" onclick="openFacebook()">
-                        <div class="tooltip">Facebook</div>
-                        <span><i class="fab fa-facebook-f"></i></span>
-                    </div>
-                    <div class="icon youtube" onclick="openYouTube()">
-                        <div class="tooltip">YouTube</div>
-                        <span><i class="fab fa-youtube"></i></span>
-                    </div>
+        <main>
+            <section class="trending-section" id="trendingSection">
+                <h2 class="section-title">Trending Now 🔥</h2>
+                <div class="songs-grid" id="trendingSongs">
+                    <!-- Default songs yaha aayenge -->
                 </div>
-            </div>
+            </section>
+
+            <section class="search-results" id="searchResults">
+                <h2 class="section-title">Search Results</h2>
+                <div class="songs-grid" id="searchResultsGrid">
+                    <!-- Search results yaha aayenge -->
+                </div>
+            </section>
         </main>
     </div>
 
     <!-- Music Player -->
     <div class="music-player" id="musicPlayer">
         <div class="player-controls">
-            <!-- Song Info -->
             <div class="song-info">
                 <div class="current-song-image">🎵</div>
                 <div class="song-details">
@@ -76,7 +57,6 @@
                 </div>
             </div>
 
-            <!-- Control Buttons -->
             <div class="control-buttons">
                 <button class="control-btn" onclick="previousSong()">
                     <i class="fas fa-step-backward"></i>
@@ -89,7 +69,6 @@
                 </button>
             </div>
 
-            <!-- Progress Bar -->
             <div class="progress-section">
                 <span class="time" id="currentTime">0:00</span>
                 <div class="progress-bar" onclick="seekSong(event)">
@@ -97,17 +76,11 @@
                 </div>
                 <span class="time" id="totalTime">0:00</span>
             </div>
-
-            <!-- Volume Control -->
-            <div class="volume-control">
-                <i class="fas fa-volume-up"></i>
-                <input type="range" id="volumeSlider" min="0" max="100" value="50" onchange="changeVolume(this.value)">
-            </div>
         </div>
     </div>
 
-    <!-- Audio Element -->
-    <audio id="audioPlayer" preload="metadata"></audio>
+    <!-- YouTube Player -->
+    <div id="youtubePlayer" style="display: none;"></div>
 
     <script src="script.js"></script>
 </body>
