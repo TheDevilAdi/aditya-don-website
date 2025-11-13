@@ -1,166 +1,87 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APNA MUSIC - Premium Streaming</title>
+    <title>Apna Music Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Sparkle Background -->
-    <div class="sparkle-bg" id="sparkleBg"></div>
+    <!-- Advanced Shooting Stars -->
+    <div class="galaxy" id="galaxy"></div>
 
-    <!-- Sidebar Toggle Button -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-icon">A</div>
-                <div class="logo-text">APNA MUSIC</div>
+    <div class="music-app">
+        <!-- Home Page -->
+        <div class="page home-page" id="homePage">
+            <div class="app-header">
+                <div class="app-title">APNA MUSIC</div>
+                <div class="app-subtitle">Home • Search • Your Library</div>
             </div>
 
-            <a href="#" class="nav-item active" onclick="showPage('home')">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showPage('search')">
-                <i class="fas fa-search"></i>
-                <span>Search</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showPage('library')">
-                <i class="fas fa-book"></i>
-                <span>Your Library</span>
-            </a>
-            
-            <div class="premium-section">
-                <h4>Premium Features</h4>
-                <p>Listen without limits. Try Premium for better experience.</p>
-                <button class="premium-btn" onclick="showPremium()">
-                    Try Premium
+            <!-- Premium Offer -->
+            <div class="player-section">
+                <h3 class="section-title">🎵 Premium Features</h3>
+                <p class="section-description">
+                    Listen without limits. Try Premium for better experience.
+                </p>
+                <div class="control-panel">
+                    <button class="control-btn primary-btn" id="premiumBtn">Try Premium</button>
+                    <button class="control-btn secondary-btn" id="profileBtn">Profile</button>
+                </div>
+            </div>
+
+            <!-- Mega Search Bar -->
+            <div class="mega-search">
+                <input type="text" class="mega-search-input" id="megaSearch" 
+                       placeholder="🔍 Search any song...">
+            </div>
+
+            <!-- Controls -->
+            <div class="control-panel">
+                <button class="control-btn mini-btn" id="miniModeBtn">
+                    📱 Minimize First Page
+                </button>
+                <button class="control-btn secondary-btn" id="loginBtn">
+                    🔐 Login
                 </button>
             </div>
 
-            <a href="#" class="nav-item" onclick="showPage('profile')">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </a>
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <small>Trending Now • New Releases • Top Charts</small>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div class="search-container">
-                    <div class="glowing-input">
-                        <input type="text" id="searchInput" placeholder="Koi bhi song search karo... YouTube jaisa" oninput="handleSearch(this.value)">
-                        <span class="search-text" id="searchText"></span>
-                    </div>
-                </div>
-
-                <div class="user-controls">
-                    <button class="theme-toggle" onclick="toggleTheme()">
-                        <i class="fas fa-moon" id="themeIcon"></i>
-                    </button>
-                    <button class="login-btn" onclick="showLogin()">
-                        Login
-                    </button>
-                </div>
+        <!-- Results Page -->
+        <div class="page results-page" id="resultsPage">
+            <div class="app-header">
+                <button class="control-btn mini-btn" id="backBtn">← Back</button>
+                <h3>Search Results</h3>
             </div>
 
-            <!-- Home Page -->
-            <div class="content-area" id="homePage">
-                <h2 class="section-title">Trending Now 🔥</h2>
-                
-                <div class="songs-grid" id="trendingSongs">
+            <!-- Now Playing Banner -->
+            <div class="now-playing-banner" id="nowPlayingBanner">
+                🎧 Select any song to play...
+            </div>
+
+            <!-- Audio Visualizer -->
+            <div class="visualizer" id="visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+
+            <!-- Songs List -->
+            <div class="player-section">
+                <h4 class="songs-count">Songs (<span id="songsCount">0</span>)</h4>
+                <div id="songsContainer">
                     <!-- Songs will be loaded here -->
                 </div>
-
-                <div class="lyrics-container" id="lyricsContainer">
-                    <h3 class="lyrics-title">Now Playing</h3>
-                    <div id="lyricsContent"></div>
-                </div>
-            </div>
-
-            <!-- Search Page -->
-            <div class="content-area search-page" id="searchPage" style="display: none;">
-                <h2 class="section-title">Search Results</h2>
-                <div class="songs-grid" id="searchResults">
-                    <!-- Search results will show here -->
-                </div>
-            </div>
-
-            <!-- Profile Page -->
-            <div class="profile-page" id="profilePage">
-                <div class="profile-header">
-                    <div class="profile-pic">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h1 class="profile-name">Aditya Editz</h1>
-                    <p class="profile-bio">Music Creator & Editor</p>
-                </div>
-
-                <div class="social-links">
-                    <a href="https://www.facebook.com/share/1Bd1E1Efbs/" class="social-icon facebook" target="_blank">
-                        <i class="fab fa-facebook-f"></i>
-                        <div class="tooltip">Facebook</div>
-                    </a>
-                    <a href="https://youtube.com/@adityaeditz-h5m?si=Fbw9BXqMdFe96vsi" class="social-icon youtube" target="_blank">
-                        <i class="fab fa-youtube"></i>
-                        <div class="tooltip">YouTube</div>
-                    </a>
-                    <a href="#" class="social-icon tiktok">
-                        <i class="fab fa-tiktok"></i>
-                        <div class="tooltip">TikTok</div>
-                    </a>
-                    <a href="#" class="social-icon alight-motion">
-                        <i class="fas fa-motion"></i>
-                        <div class="tooltip">Alight Motion</div>
-                    </a>
-                </div>
             </div>
         </div>
     </div>
-
-    <!-- Music Player -->
-    <div class="music-player" id="musicPlayer">
-        <div class="player-controls">
-            <div class="song-info">
-                <div class="current-song-image">🎵</div>
-                <div class="song-details">
-                    <div class="current-song-title" id="nowPlayingTitle">Select a song</div>
-                    <div class="current-song-artist" id="nowPlayingArtist">Artist</div>
-                </div>
-            </div>
-
-            <div class="control-buttons">
-                <button class="control-btn" onclick="previousSong()">
-                    <i class="fas fa-step-backward"></i>
-                </button>
-                <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
-                    <i class="fas fa-play" id="playIcon"></i>
-                </button>
-                <button class="control-btn" onclick="nextSong()">
-                    <i class="fas fa-step-forward"></i>
-                </button>
-            </div>
-
-            <div class="progress-section">
-                <span class="time" id="currentTime">0:00</span>
-                <div class="progress-bar" onclick="seekSong(event)">
-                    <div class="progress" id="progress"></div>
-                </div>
-                <span class="time" id="totalTime">0:00</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Audio Element -->
-    <audio id="audioPlayer" preload="metadata"></audio>
 
     <script src="script.js"></script>
 </body>
