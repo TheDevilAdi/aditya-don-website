@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APNA MUSIC - Premium Streaming</title>
+    <title>APNA MUSIC</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -15,48 +15,117 @@
                 <i class="fas fa-music"></i>
                 APNA MUSIC
             </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="profile">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="contacts">Contacts</a>
+                </li>
+            </ul>
+
             <div class="search-container">
-                <div class="glowing-input">
-                    <input type="text" id="searchInput" placeholder="Search songs, artists, albums...">
-                    <span class="focus-border"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search songs, artists...">
                 </div>
-            </div>
-            <div class="nav-user">
-                <button class="premium-btn">Go Premium</button>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="container main-content">
-        <h1 class="section-title">Trending Now 🔥</h1>
-        
-        <!-- Songs Grid -->
-        <div class="songs-grid" id="trendingSongs">
-            <!-- Songs will be loaded here -->
-        </div>
-
-        <!-- Lyrics Container -->
-        <div class="lyrics-container" id="lyricsContainer">
-            <div id="lyricsContent"></div>
-        </div>
-
-        <!-- Social Media -->
-        <div class="social-container">
-            <div class="icon facebook">
-                <div class="tooltip">Facebook</div>
-                <span><i class="fab fa-facebook-f"></i></span>
-            </div>
-            <div class="icon youtube">
-                <div class="tooltip">YouTube</div>
-                <span><i class="fab fa-youtube"></i></span>
+        <!-- Home Page -->
+        <div class="page active" id="home">
+            <h1 class="section-title">Trending Now 😽</h1>
+            <div class="songs-grid" id="songsGrid">
+                <!-- Songs will be loaded here -->
             </div>
         </div>
 
-        <!-- Loading -->
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            Loading songs...
+        <!-- Player Page -->
+        <div class="page" id="player">
+            <div class="player-header">
+                <button class="back-btn" onclick="showPage('home')">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="section-title">Now Playing</h1>
+            </div>
+            
+            <div class="player-content">
+                <div class="current-song-image">
+                    <img id="currentSongImage" src="" alt="Song Image">
+                </div>
+                
+                <div class="lyrics-container">
+                    <div class="lyrics-content" id="lyricsContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div class="page" id="profile">
+            <h1 class="section-title">My Profile</h1>
+            <div class="profile-container">
+                <div class="profile-image">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop&crop=face" alt="Profile">
+                </div>
+                <h2 class="profile-name">Shushant KC</h2>
+                <p class="profile-bio">Music Lover • Content Creator • Developer</p>
+                
+                <div class="social-container">
+                    <a href="https://www.facebook.com/share/1Bd1E1Efbs/" class="social-icon facebook" target="_blank">
+                        <div class="tooltip">Facebook</div>
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://youtube.com/@adityaeditz-h5m?si=Fbw9BXqMdFe96vsi" class="social-icon youtube" target="_blank">
+                        <div class="tooltip">YouTube</div>
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="social-icon tiktok">
+                        <div class="tooltip">TikTok (Coming Soon)</div>
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts Page -->
+        <div class="page" id="contacts">
+            <h1 class="section-title">Contact Us</h1>
+            <div class="contacts-container">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Email</h3>
+                        <p>support@apnamusic.com</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Phone</h3>
+                        <p>+91 9876543210</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Address</h3>
+                        <p>Mumbai, India</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -64,7 +133,9 @@
     <div class="music-player" id="musicPlayer">
         <div class="player-controls">
             <div class="song-info">
-                <div class="current-song-image">🎵</div>
+                <div class="mini-song-image">
+                    <img id="miniSongImage" src="" alt="Song">
+                </div>
                 <div class="current-song-details">
                     <div class="current-song-title" id="nowPlayingTitle">Select a song</div>
                     <div class="current-song-artist" id="nowPlayingArtist">Artist</div>
@@ -72,9 +143,15 @@
             </div>
             
             <div class="control-buttons">
-                <button class="control-btn"><i class="fas fa-step-backward"></i></button>
-                <button class="control-btn play-btn" id="playBtn"><i class="fas fa-play"></i></button>
-                <button class="control-btn"><i class="fas fa-step-forward"></i></button>
+                <button class="control-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="control-btn play-btn" id="playBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
             </div>
 
             <div class="progress-section">
