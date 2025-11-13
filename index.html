@@ -3,148 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APNA MUSIC - Premium Music Player</title>
+    <title>APNA MUSIC - Perfect Player</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dark-theme">
-    <!-- Loading Animation -->
+    <!-- Simple Loading -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="loader">
-            <div class="pulse"></div>
-            <div class="pulse"></div>
-            <div class="pulse"></div>
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>APNA MUSIC</h2>
+            <p>Loading your music...</p>
         </div>
-        <h2 class="loading-text">APNA MUSIC</h2>
-        <p class="loading-subtitle">By A_E</p>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content" id="mainContent">
-        <!-- Navigation -->
-        <nav class="glass-nav">
-            <div class="nav-left">
-                <div class="logo">
-                    <h1 class="animated-text">🎵 APNA MUSIC</h1>
-                    <p class="subtitle">By A_E</p>
-                </div>
+        <!-- Simple Header -->
+        <header class="simple-header">
+            <h1>🎵 APNA MUSIC</h1>
+            <p class="subtitle">By A_E</p>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search songs...">
+                <button onclick="searchMusic()">Search</button>
             </div>
             
-            <div class="nav-center">
-                <div class="search-container">
-                    <div class="search-bar">
-                        <input type="text" id="searchInput" placeholder="Search any song, artist... 🎤">
-                        <button onclick="searchMusic()">
-                            <span class="btn-text">Search</span>
-                            <span class="btn-glow"></span>
-                        </button>
-                    </div>
+            <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+        </header>
+
+        <!-- Modern Music Player -->
+        <div class="modern-player">
+            <!-- CD Style Album Art -->
+            <div class="cd-container">
+                <div class="cd">
+                    <img id="albumImage" src="https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=300&h=300&fit=crop" alt="Album">
+                    <div class="cd-hole"></div>
+                    <div class="cd-ring"></div>
                 </div>
+                <div class="cd-shadow"></div>
             </div>
 
-            <div class="nav-right">
-                <div class="theme-toggle">
-                    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">
-                        <span class="theme-icon">🌙</span>
-                        <span class="theme-text">Dark</span>
-                        <div class="theme-glow"></div>
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Rest of the code remains same -->
-        <!-- Music Player -->
-        <div class="music-player glass">
-            <div class="album-art-container">
-                <div class="album-art">
-                    <img id="albumImage" src="https://i.imgur.com/9E0OUx2.png" alt="Anime Boy Listening Music" onerror="this.src='https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=400&h=400&fit=crop'">
-                    <div class="rotating-disc"></div>
-                    <div class="vinyl-ring"></div>
-                    <div class="play-pulse"></div>
-                    <div class="music-waves">
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="player-controls">
-                <h2 id="songTitle" class="song-title glow-text">Select Your Vibe</h2>
-                <p id="artistName" class="artist-name">Click any song below to start</p>
+            <!-- Player Info -->
+            <div class="player-info">
+                <h2 id="songTitle" class="song-title">Select Song</h2>
+                <p id="artistName" class="artist-name">Artist Name</p>
                 
+                <!-- Progress -->
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div class="progress" id="progress"></div>
                     </div>
-                    <div class="time-display">
+                    <div class="time">
                         <span id="currentTime">0:00</span>
                         <span id="duration">0:00</span>
                     </div>
                 </div>
-                
-                <div class="controls">
-                    <button class="control-btn modern-btn" onclick="previousSong()">
-                        <span class="btn-icon">⏮</span>
-                        <div class="btn-hover"></div>
+
+                <!-- Modern Controls -->
+                <div class="modern-controls">
+                    <button class="control modern-btn" onclick="previousSong()">
+                        <span>⏮</span>
                     </button>
-                    <button class="control-btn play-btn modern-btn" onclick="togglePlay()" id="playBtn">
-                        <span class="btn-icon">▶️</span>
-                        <div class="btn-hover"></div>
-                        <div class="btn-shine"></div>
+                    <button class="control play-btn modern-btn" onclick="togglePlay()" id="playBtn">
+                        <span>▶</span>
                     </button>
-                    <button class="control-btn modern-btn" onclick="nextSong()">
-                        <span class="btn-icon">⏭</span>
-                        <div class="btn-hover"></div>
+                    <button class="control modern-btn" onclick="nextSong()">
+                        <span>⏭</span>
                     </button>
                 </div>
 
-                <div class="volume-control">
-                    <span class="volume-icon">🔊</span>
-                    <input type="range" id="volume" min="0" max="1" step="0.1" value="0.8" onchange="setVolume(this.value)">
+                <!-- Volume -->
+                <div class="volume">
+                    <span>🔊</span>
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="0.8">
                 </div>
             </div>
         </div>
 
-        <!-- Song List -->
-        <div class="song-list">
-            <div class="section-header">
-                <h3 class="section-title neon-text">🔥 TRENDING NOW</h3>
-                <div class="visualizer">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-            </div>
-            <div id="songContainer" class="songs-grid">
-                <!-- Songs will load here automatically -->
+        <!-- Songs List - Simple -->
+        <div class="songs-section">
+            <h3>🎵 Recommended Songs</h3>
+            <div id="songContainer" class="songs-list">
+                <!-- Songs will appear here -->
             </div>
         </div>
 
-        <!-- Lyrics Section -->
-        <div class="lyrics-section glass">
-            <h3 class="section-title neon-text">🎤 LIVE LYRICS</h3>
-            <div id="lyrics" class="lyrics-text">
-                <p class="placeholder-text">🎵 Music speaks where words fail... Select a song! 🎶</p>
+        <!-- Simple Lyrics -->
+        <div class="lyrics-box">
+            <h3>📜 Lyrics</h3>
+            <div id="lyrics" class="lyrics">
+                <p>Play a song to see lyrics</p>
             </div>
-        </div>
-
-        <!-- Floating Particles -->
-        <div class="particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
         </div>
     </div>
 
-    <!-- Audio Element -->
-    <audio id="audioPlayer" preload="metadata"></audio>
-
+    <audio id="audioPlayer"></audio>
     <script src="script.js"></script>
 </body>
 </html>
