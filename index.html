@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>APNA MUSIC - Premium Streaming</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
             <div class="top-bar">
                 <div class="search-container">
                     <div class="glowing-input">
-                        <input type="text" id="searchInput" placeholder="What do you want to listen to?">
+                        <input type="text" id="searchInput" placeholder="What do you want to listen to?" onkeyup="searchSongs()">
                     </div>
                 </div>
 
@@ -67,11 +67,16 @@
             </div>
 
             <!-- Home Page -->
-            <div class="content-area" id="homePage">
+            <div class="content-area active-page" id="homePage">
                 <h2 class="section-title">Trending Now 🔥</h2>
                 
                 <div class="songs-grid" id="trendingSongs">
-                    <!-- Songs will be loaded here -->
+                    <!-- Songs will be loaded here by JavaScript -->
+                </div>
+
+                <h2 class="section-title" style="margin-top: 30px;">All Songs</h2>
+                <div class="songs-grid" id="allSongs">
+                    <!-- All songs will be loaded here -->
                 </div>
 
                 <div class="lyrics-container" id="lyricsContainer">
@@ -80,8 +85,24 @@
                 </div>
             </div>
 
+            <!-- Search Page -->
+            <div class="content-area" id="searchPage">
+                <h2 class="section-title">Search Songs</h2>
+                <div class="search-results" id="searchResults">
+                    <p>Type in search bar to find songs</p>
+                </div>
+            </div>
+
+            <!-- Library Page -->
+            <div class="content-area" id="libraryPage">
+                <h2 class="section-title">Your Library</h2>
+                <div class="library-content">
+                    <p>Your favorite songs will appear here</p>
+                </div>
+            </div>
+
             <!-- Profile Page -->
-            <div class="profile-page" id="profilePage">
+            <div class="content-area" id="profilePage">
                 <div class="profile-header">
                     <div class="profile-pic">
                         <i class="fas fa-user"></i>
