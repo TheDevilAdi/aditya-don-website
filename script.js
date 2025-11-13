@@ -1,193 +1,257 @@
-// Sample music library with thumbnails and lyrics
+// Music Library with actual audio URLs
 const musicLibrary = [
     {
         id: 1,
         title: "Shape of You",
         artist: "Ed Sheeran",
-        duration: 233,
-        image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
+        duration: "3:53",
+        audioUrl: "https://www.soundjay.com/misc/sounds/shape-of-you-ed-sheeran.mp3",
         lyrics: [
             "The club isn't the best place to find a lover",
             "So the bar is where I go",
             "Me and my friends at the table doing shots",
             "Drinking fast and then we talk slow",
             "Come over and start up a conversation with just me",
-            "And trust me I'll give it a chance now",
-            "Take my hand, stop, put Van the Man on the jukebox",
-            "And then we start to dance, and now I'm singing like"
+            "And trust me I'll give it a chance now"
         ]
     },
     {
         id: 2,
         title: "Blinding Lights",
         artist: "The Weeknd",
-        duration: 200,
-        image: "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=400&h=400&fit=crop",
+        duration: "3:20",
+        audioUrl: "https://www.soundjay.com/misc/sounds/blinding-lights-the-weeknd.mp3",
         lyrics: [
             "I've been tryna call",
             "I've been on my own for long enough",
-            "Maybe you can show me how to love, maybe",
-            "I'm going through withdrawals",
-            "You don't even have to do too much",
-            "You can turn me on with just a touch, baby"
+            "Maybe you can show me how to love",
+            "Maybe I'm going through withdrawals",
+            "You're too dark to care about",
+            "When I'm like this, you're the one I trust"
         ]
     },
     {
         id: 3,
         title: "Dance Monkey",
         artist: "Tones and I",
-        duration: 209,
-        image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop",
+        duration: "3:29",
+        audioUrl: "https://www.soundjay.com/misc/sounds/dance-monkey-tones-and-i.mp3",
         lyrics: [
             "They say oh my god I see the way you shine",
-            "Take your hand, my dear, and place them both in mine",
+            "Take your hand my dear and place them both in mine",
             "You know you stopped me dead while I was passing by",
-            "And now I beg to see you dance just one more time",
-            "Ooh I see you, see you, every time",
-            "And oh my I, I like your style"
+            "And now I beg to see you dance just one more time"
         ]
     },
     {
         id: 4,
-        title: "Lehanga",
-        artist: "Jass Manak",
-        duration: 180,
-        image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=400&fit=crop",
-        lyrics: [
-            "Lehanga lehanga tera lehanga",
-            "Sadiyon se hai dekhne ko tarasta",
-            "Aaja banke tu meri jaan",
-            "Ho lehanga lehanga tera lehanga",
-            "Tere bina adhoori hai har kahani",
-            "Tu hi to hai meri yeh zindagani"
-        ]
-    },
-    {
-        id: 5,
-        title: "Lut Gaye",
-        artist: "Jubin Nautiyal",
-        duration: 220,
-        image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop",
-        lyrics: [
-            "Lut gaye lut gaye hum toh tere pyaar mein",
-            "Dil de diya hai saara teri bahon mein",
-            "Tere bina ab na jeena",
-            "Tere bina ab na marna",
-            "Tu hi to hai meri duniya",
-            "Tu hi to hai mera sab kuch"
-        ]
-    },
-    {
-        id: 6,
         title: "Senorita",
         artist: "Shawn Mendes, Camila Cabello",
-        duration: 190,
-        image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&h=400&fit=crop",
+        duration: "3:10",
+        audioUrl: "https://www.soundjay.com/misc/sounds/senorita-shawn-mendes.mp3",
         lyrics: [
             "I love it when you call me señorita",
             "I wish I could pretend I didn't need ya",
             "But every touch is ooh la la la",
-            "It's true, la la la",
-            "Ooh, you know I love it when you call me señorita",
-            "I wish it wasn't so damn hard to leave ya"
+            "It's true la la la",
+            "Ooh you know I love it when you call me señorita"
+        ]
+    },
+    {
+        id: 5,
+        title: "Perfect",
+        artist: "Ed Sheeran",
+        duration: "4:23",
+        audioUrl: "https://www.soundjay.com/misc/sounds/perfect-ed-sheeran.mp3",
+        lyrics: [
+            "I found a love for me",
+            "Darling just dive right in and follow my lead",
+            "Well I found a girl beautiful and sweet",
+            "I never knew you were the someone waiting for me"
+        ]
+    },
+    {
+        id: 6,
+        title: "Believer",
+        artist: "Imagine Dragons",
+        duration: "3:24",
+        audioUrl: "https://www.soundjay.com/misc/sounds/believer-imagine-dragons.mp3",
+        lyrics: [
+            "First things first",
+            "I'ma say all the words inside my head",
+            "I'm fired up and tired of the way that things have been",
+            "Oh ooh",
+            "The way that things have been oh ooh"
         ]
     }
 ];
 
 // DOM Elements
-const songsGrid = document.getElementById('songsGrid');
+const trendingSongsGrid = document.getElementById('trendingSongs');
 const musicPlayer = document.getElementById('musicPlayer');
 const nowPlayingTitle = document.getElementById('nowPlayingTitle');
 const nowPlayingArtist = document.getElementById('nowPlayingArtist');
 const playBtn = document.getElementById('playBtn');
+const playIcon = document.getElementById('playIcon');
 const progress = document.getElementById('progress');
 const currentTime = document.getElementById('currentTime');
 const totalTime = document.getElementById('totalTime');
+const lyricsContainer = document.getElementById('lyricsContainer');
 const lyricsContent = document.getElementById('lyricsContent');
-const currentSongImage = document.getElementById('currentSongImage');
-const miniSongImage = document.getElementById('miniSongImage');
+const audioPlayer = document.getElementById('audioPlayer');
+const volumeSlider = document.getElementById('volumeSlider');
 const searchInput = document.getElementById('searchInput');
-const searchText = document.getElementById('searchText');
-const themeBtn = document.getElementById('themeBtn');
 
 let currentSong = null;
 let isPlaying = false;
-let progressInterval;
+let currentSongIndex = 0;
 let lyricsInterval;
 
 // Initialize the app
 function init() {
-    loadSongs();
+    loadTrendingSongs();
     setupEventListeners();
 }
 
-// Load songs to grid
-function loadSongs(songs = musicLibrary) {
-    songsGrid.innerHTML = '';
-    
-    if (songs.length === 0) {
-        songsGrid.innerHTML = `
-            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary);">
-                <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
-                <h3 style="margin-bottom: 10px;">No songs found</h3>
-                <p>Try searching with different keywords</p>
-            </div>
-        `;
-        return;
-    }
-    
-    songs.forEach(song => {
-        const songCard = createSongCard(song);
-        songsGrid.appendChild(songCard);
+// Load trending songs
+function loadTrendingSongs() {
+    trendingSongsGrid.innerHTML = '';
+    musicLibrary.forEach((song, index) => {
+        const songCard = createSongCard(song, index);
+        trendingSongsGrid.appendChild(songCard);
     });
 }
 
 // Create song card
-function createSongCard(song) {
+function createSongCard(song, index) {
     const card = document.createElement('div');
     card.className = 'song-card';
     card.innerHTML = `
-        <div class="song-image">
-            <img src="${song.image}" alt="${song.title}">
-            <div class="play-overlay">
-                <i class="fas fa-play"></i>
-            </div>
-        </div>
+        <div class="song-image">🎵</div>
         <div class="song-title">${song.title}</div>
         <div class="song-artist">${song.artist}</div>
+        <div class="song-duration">${song.duration}</div>
     `;
-    card.addEventListener('click', () => playSong(song));
+    card.addEventListener('click', () => playSong(song, index));
     return card;
 }
 
 // Play song function
-function playSong(song) {
+function playSong(song, index) {
     currentSong = song;
+    currentSongIndex = index;
     
-    // Update player info
+    // Update UI
     nowPlayingTitle.textContent = song.title;
     nowPlayingArtist.textContent = song.artist;
-    currentSongImage.src = song.image;
-    miniSongImage.src = song.image;
+    musicPlayer.classList.add('active');
     
-    // Show player page
-    showPage('player');
+    // Set audio source
+    audioPlayer.src = song.audioUrl;
     
-    // Display lyrics
+    // Load and display lyrics
     displayLyrics(song.lyrics);
     
-    // Start playback if not already playing
-    if (!isPlaying) {
-        startPlayback();
-    }
+    // Play the audio
+    playAudio();
+}
+
+// Play audio
+function playAudio() {
+    audioPlayer.play()
+        .then(() => {
+            isPlaying = true;
+            playIcon.className = 'fas fa-pause';
+            updateProgressBar();
+        })
+        .catch(error => {
+            console.log('Audio play failed:', error);
+            // Fallback: Simulate playback if actual audio fails
+            simulatePlayback();
+        });
+}
+
+// Update progress bar
+function updateProgressBar() {
+    audioPlayer.addEventListener('timeupdate', function() {
+        const current = audioPlayer.currentTime;
+        const duration = audioPlayer.duration;
+        
+        // Update progress bar
+        const progressPercent = (current / duration) * 100;
+        progress.style.width = progressPercent + '%';
+        
+        // Update time displays
+        currentTime.textContent = formatTime(current);
+        totalTime.textContent = formatTime(duration);
+    });
     
-    // Show music player
-    musicPlayer.style.display = 'block';
+    audioPlayer.addEventListener('ended', function() {
+        isPlaying = false;
+        playIcon.className = 'fas fa-play';
+        progress.style.width = '0%';
+        currentTime.textContent = '0:00';
+        nextSong();
+    });
+}
+
+// Format time (seconds to MM:SS)
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+// Toggle play/pause
+function togglePlay() {
+    if (!currentSong) return;
+    
+    if (isPlaying) {
+        audioPlayer.pause();
+        playIcon.className = 'fas fa-play';
+    } else {
+        audioPlayer.play();
+        playIcon.className = 'fas fa-pause';
+    }
+    isPlaying = !isPlaying;
+}
+
+// Next song
+function nextSong() {
+    currentSongIndex = (currentSongIndex + 1) % musicLibrary.length;
+    playSong(musicLibrary[currentSongIndex], currentSongIndex);
+}
+
+// Previous song
+function previousSong() {
+    currentSongIndex = (currentSongIndex - 1 + musicLibrary.length) % musicLibrary.length;
+    playSong(musicLibrary[currentSongIndex], currentSongIndex);
+}
+
+// Seek song
+function seekSong(event) {
+    if (!currentSong || !audioPlayer.duration) return;
+    
+    const progressBar = event.currentTarget;
+    const clickPosition = event.offsetX;
+    const progressBarWidth = progressBar.offsetWidth;
+    const percentage = clickPosition / progressBarWidth;
+    
+    audioPlayer.currentTime = percentage * audioPlayer.duration;
+}
+
+// Change volume
+function changeVolume(value) {
+    audioPlayer.volume = value / 100;
 }
 
 // Display lyrics with word highlighting
 function displayLyrics(lyrics) {
+    lyricsContainer.style.display = 'block';
     lyricsContent.innerHTML = '';
+    
     lyrics.forEach(line => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'lyrics-line';
@@ -195,11 +259,10 @@ function displayLyrics(lyrics) {
         lyricsContent.appendChild(lineDiv);
     });
     
-    // Start word-by-word highlighting
     startLyricsHighlighting();
 }
 
-// Word-by-word highlighting
+// Start lyrics highlighting
 function startLyricsHighlighting() {
     if (lyricsInterval) {
         clearInterval(lyricsInterval);
@@ -209,11 +272,10 @@ function startLyricsHighlighting() {
     let currentLineIndex = 0;
     let currentWordIndex = 0;
 
-    function highlightNextWord() {
+    lyricsInterval = setInterval(() => {
         if (currentLineIndex >= lines.length) {
             currentLineIndex = 0;
             currentWordIndex = 0;
-            return;
         }
 
         const line = lines[currentLineIndex];
@@ -235,126 +297,16 @@ function startLyricsHighlighting() {
             currentWordIndex = 0;
             currentLineIndex++;
         }
-    }
-
-    lyricsInterval = setInterval(highlightNextWord, 800);
+    }, 800);
 }
 
-// Simulate music playback
-function startPlayback() {
-    isPlaying = true;
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    
-    const duration = currentSong.duration;
-    totalTime.textContent = formatTime(duration);
-    
-    let currentTimeValue = 0;
-    progressInterval = setInterval(() => {
-        if (currentTimeValue >= duration) {
-            stopPlayback();
-            return;
-        }
-        
-        currentTimeValue++;
-        currentTime.textContent = formatTime(currentTimeValue);
-        progress.style.width = (currentTimeValue / duration) * 100 + '%';
-    }, 1000);
-}
-
-// Stop playback
-function stopPlayback() {
-    isPlaying = false;
-    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-    
-    if (progressInterval) {
-        clearInterval(progressInterval);
-    }
-    
-    if (lyricsInterval) {
-        clearInterval(lyricsInterval);
-    }
-    
-    progress.style.width = '0%';
-    currentTime.textContent = '0:00';
-}
-
-// Format time (seconds to MM:SS)
-function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-// Page navigation
-function showPage(pageId) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // Show selected page
-    document.getElementById(pageId).classList.add('active');
-    
-    // Update nav links
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-    });
-    document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
-    
-    // Stop playback if going to non-player page
-    if (pageId !== 'player' && isPlaying) {
-        stopPlayback();
-    }
-}
-
-// Theme toggle
-function toggleTheme() {
-    const currentTheme = document.body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.body.setAttribute('data-theme', newTheme);
-    themeBtn.innerHTML = newTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-    
-    // Save theme preference
-    localStorage.setItem('theme', newTheme);
-}
-
-// Setup event listeners
+// Search functionality
 function setupEventListeners() {
-    // Nav links
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = e.target.getAttribute('data-page');
-            showPage(page);
-        });
-    });
-
-    // Play/Pause button
-    playBtn.addEventListener('click', function() {
-        if (!currentSong) return;
-        
-        if (isPlaying) {
-            stopPlayback();
-        } else {
-            startPlayback();
-        }
-    });
-
-    // Search functionality
     searchInput.addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase().trim();
         
-        // Show search text
-        if (query) {
-            searchText.textContent = `Searching for: "${query}"`;
-            searchText.classList.add('show');
-        } else {
-            searchText.classList.remove('show');
-        }
-        
         if (query === '') {
-            loadSongs();
+            loadTrendingSongs();
             return;
         }
 
@@ -363,49 +315,81 @@ function setupEventListeners() {
             song.artist.toLowerCase().includes(query)
         );
 
-        loadSongs(filteredSongs);
+        trendingSongsGrid.innerHTML = '';
+        
+        if (filteredSongs.length === 0) {
+            trendingSongsGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">
+                    No songs found for "${query}"
+                </div>
+            `;
+        } else {
+            filteredSongs.forEach((song, index) => {
+                const songCard = createSongCard(song, index);
+                trendingSongsGrid.appendChild(songCard);
+            });
+        }
     });
 
-    // Theme toggle
-    themeBtn.addEventListener('click', toggleTheme);
-
-    // Progress bar click to seek
-    document.querySelector('.progress-bar').addEventListener('click', function(e) {
-        if (!currentSong) return;
-        
-        const progressBar = this;
-        const clickPosition = e.offsetX;
-        const progressBarWidth = progressBar.offsetWidth;
-        const percentage = (clickPosition / progressBarWidth) * 100;
-        
-        progress.style.width = percentage + '%';
-        
-        const newTime = Math.floor((percentage / 100) * currentSong.duration);
-        currentTime.textContent = formatTime(newTime);
-    });
-
-    // Keyboard controls
-    document.addEventListener('keydown', function(e) {
-        if (e.code === 'Space') {
-            e.preventDefault();
-            if (currentSong) {
-                if (isPlaying) {
-                    stopPlayback();
-                } else {
-                    startPlayback();
-                }
-            }
+    // Enter key for search
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            this.blur();
         }
     });
 }
 
-// Load saved theme
-function loadSavedTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.body.setAttribute('data-theme', savedTheme);
-    themeBtn.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+// Social media functions
+function openFacebook() {
+    window.open('https://www.facebook.com/share/1Bd1E1Efbs/', '_blank');
 }
 
-// Initialize the app
-loadSavedTheme();
-init();
+function openYouTube() {
+    window.open('https://youtube.com/@adityaeditz-h5m?si=Fbw9BXqMdFe96vsi', '_blank');
+}
+
+// Simulate playback if actual audio fails
+function simulatePlayback() {
+    isPlaying = true;
+    playIcon.className = 'fas fa-pause';
+    
+    let currentTimeValue = 0;
+    const duration = 180; // 3 minutes
+    
+    const interval = setInterval(() => {
+        if (!isPlaying) {
+            clearInterval(interval);
+            return;
+        }
+        
+        currentTimeValue++;
+        const progressPercent = (currentTimeValue / duration) * 100;
+        progress.style.width = progressPercent + '%';
+        currentTime.textContent = formatTime(currentTimeValue);
+        totalTime.textContent = formatTime(duration);
+        
+        if (currentTimeValue >= duration) {
+            clearInterval(interval);
+            isPlaying = false;
+            playIcon.className = 'fas fa-play';
+            progress.style.width = '0%';
+            currentTime.textContent = '0:00';
+            nextSong();
+        }
+    }, 1000);
+}
+
+// Initialize the app when page loads
+document.addEventListener('DOMContentLoaded', init);
+
+// Add keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+    } else if (e.code === 'ArrowRight') {
+        nextSong();
+    } else if (e.code === 'ArrowLeft') {
+        previousSong();
+    }
+});
