@@ -3,82 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apna Music Pro</title>
+    <title>Apna Music</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Advanced Shooting Stars -->
-    <div class="galaxy" id="galaxy"></div>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
 
-    <div class="music-app">
-        <!-- Home Page -->
-        <div class="page home-page" id="homePage">
-            <div class="app-header">
-                <div class="app-title">APNA MUSIC</div>
-                <div class="app-subtitle">Home • Search • Your Library</div>
+    <div class="container">
+        <!-- First Page -->
+        <div class="first-page" id="firstPage">
+            <div class="header">
+                <div class="logo">APNA MUSIC</div>
+                <div>Home Search Your Library</div>
             </div>
 
-            <!-- Premium Offer -->
-            <div class="player-section">
-                <h3 class="section-title">🎵 Premium Features</h3>
-                <p class="section-description">
-                    Listen without limits. Try Premium for better experience.
-                </p>
-                <div class="control-panel">
-                    <button class="control-btn primary-btn" id="premiumBtn">Try Premium</button>
-                    <button class="control-btn secondary-btn" id="profileBtn">Profile</button>
-                </div>
+            <!-- Premium Section -->
+            <div class="premium-section">
+                <h3>Premium Features</h3>
+                <p>Listen without limits. Try Premium for better experience.</p>
+                <button class="btn premium-btn">Try Premium</button>
+                <button class="btn login-btn">Profile</button>
             </div>
 
-            <!-- Mega Search Bar -->
-            <div class="mega-search">
-                <input type="text" class="mega-search-input" id="megaSearch" 
-                       placeholder="🔍 Search any song...">
+            <!-- Big Search Bar -->
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" 
+                       placeholder="Search any song...">
             </div>
 
-            <!-- Controls -->
-            <div class="control-panel">
-                <button class="control-btn mini-btn" id="miniModeBtn">
-                    📱 Minimize First Page
-                </button>
-                <button class="control-btn secondary-btn" id="loginBtn">
-                    🔐 Login
+            <!-- Minimize Button -->
+            <div class="minimize-section">
+                <button class="btn minimize-btn" onclick="minimizeFirstPage()">
+                    Minimize First Page
                 </button>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <small>Trending Now • New Releases • Top Charts</small>
+            <!-- Login Button -->
+            <div class="login-section">
+                <button class="btn login-btn">Login</button>
             </div>
         </div>
 
-        <!-- Results Page -->
-        <div class="page results-page" id="resultsPage">
-            <div class="app-header">
-                <button class="control-btn mini-btn" id="backBtn">← Back</button>
-                <h3>Search Results</h3>
+        <!-- Second Page -->
+        <div class="second-page" id="secondPage">
+            <h3>Search Results</h3>
+            <div class="now-playing" id="nowPlaying">
+                Select any song to play...
             </div>
-
-            <!-- Now Playing Banner -->
-            <div class="now-playing-banner" id="nowPlayingBanner">
-                🎧 Select any song to play...
-            </div>
-
-            <!-- Audio Visualizer -->
-            <div class="visualizer" id="visualizer">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-
-            <!-- Songs List -->
-            <div class="player-section">
-                <h4 class="songs-count">Songs (<span id="songsCount">0</span>)</h4>
-                <div id="songsContainer">
-                    <!-- Songs will be loaded here -->
-                </div>
+            <div class="song-list" id="songList">
+                <!-- Songs will appear here -->
             </div>
         </div>
     </div>
