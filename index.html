@@ -5,178 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APNA MUSIC</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body data-theme="dark">
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container nav-container">
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
             <div class="logo">
                 <i class="fas fa-music"></i>
-                APNA MUSIC
+                <span>APNA MUSIC</span>
             </div>
             
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active" data-page="home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-page="profile">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-page="contacts">Contacts</a>
-                </li>
-            </ul>
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="#" class="nav-link">Profile</a>
+                <a href="#" class="nav-link">Contacts</a>
+            </nav>
 
-            <div class="theme-toggle">
-                <button id="themeBtn" class="theme-btn">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Search Bar -->
-    <div class="search-section">
-        <div class="container">
+            <!-- Search Bar -->
             <div class="search-container">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
+                <div class="glowing-input">
                     <input type="text" id="searchInput" placeholder="Search songs, artists...">
-                    <div class="search-text" id="searchText"></div>
+                    <span class="focus-border"></span>
                 </div>
             </div>
-        </div>
-    </div>
+        </header>
 
-    <!-- Main Content -->
-    <div class="container main-content">
-        <!-- Home Page -->
-        <div class="page active" id="home">
+        <!-- Main Content -->
+        <main class="main-content">
             <h1 class="section-title">Trending Now 🔥</h1>
-            <div class="songs-grid" id="songsGrid">
-                <!-- Songs will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Player Page -->
-        <div class="page" id="player">
-            <div class="player-header">
-                <button class="back-btn" onclick="showPage('home')">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <h1 class="section-title">Now Playing</h1>
-            </div>
             
-            <div class="player-content">
-                <div class="current-song-image">
-                    <img id="currentSongImage" src="" alt="Song Image">
-                </div>
-                
-                <div class="lyrics-container">
-                    <div class="lyrics-content" id="lyricsContent"></div>
-                </div>
+            <!-- Songs Grid -->
+            <div class="songs-grid" id="trendingSongs">
+                <!-- Songs will load here -->
             </div>
-        </div>
 
-        <!-- Profile Page -->
-        <div class="page" id="profile">
-            <h1 class="section-title">My Profile</h1>
-            <div class="profile-container">
-                <div class="profile-image">
-                    <div class="profile-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
-                <h2 class="profile-name">Aditya Editz</h2>
-                <p class="profile-bio">Music Lover • Content Creator • Developer</p>
-                
+            <!-- Lyrics Section -->
+            <div class="lyrics-container" id="lyricsContainer">
+                <h3>Now Playing</h3>
+                <div id="lyricsContent"></div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="social-section">
+                <h3>Connect With Us</h3>
                 <div class="social-container">
-                    <a href="https://www.facebook.com/share/1Bd1E1Efbs/" class="social-icon facebook" target="_blank">
+                    <div class="icon facebook" onclick="openFacebook()">
                         <div class="tooltip">Facebook</div>
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://youtube.com/@adityaeditz-h5m?si=Fbw9BXqMdFe96vsi" class="social-icon youtube" target="_blank">
+                        <span><i class="fab fa-facebook-f"></i></span>
+                    </div>
+                    <div class="icon youtube" onclick="openYouTube()">
                         <div class="tooltip">YouTube</div>
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="#" class="social-icon tiktok">
-                        <div class="tooltip">TikTok (Coming Soon)</div>
-                        <i class="fab fa-tiktok"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contacts Page -->
-        <div class="page" id="contacts">
-            <h1 class="section-title">Contact Us</h1>
-            <div class="contacts-container">
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="contact-info">
-                        <h3>Email</h3>
-                        <p>adityaeditz@gmail.com</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <div class="contact-info">
-                        <h3>Phone</h3>
-                        <p>Coming Soon</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="contact-info">
-                        <h3>Address</h3>
-                        <p>Morang, Biratnagar</p>
+                        <span><i class="fab fa-youtube"></i></span>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Music Player -->
     <div class="music-player" id="musicPlayer">
         <div class="player-controls">
+            <!-- Song Info -->
             <div class="song-info">
-                <div class="mini-song-image">
-                    <img id="miniSongImage" src="" alt="Song">
-                </div>
-                <div class="current-song-details">
-                    <div class="current-song-title" id="nowPlayingTitle">Select a song</div>
-                    <div class="current-song-artist" id="nowPlayingArtist">Artist</div>
+                <div class="current-song-image">🎵</div>
+                <div class="song-details">
+                    <div class="song-title" id="nowPlayingTitle">Select a song</div>
+                    <div class="song-artist" id="nowPlayingArtist">Artist</div>
                 </div>
             </div>
-            
+
+            <!-- Control Buttons -->
             <div class="control-buttons">
-                <button class="control-btn">
+                <button class="control-btn" onclick="previousSong()">
                     <i class="fas fa-step-backward"></i>
                 </button>
-                <button class="control-btn play-btn" id="playBtn">
-                    <i class="fas fa-play"></i>
+                <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
+                    <i class="fas fa-play" id="playIcon"></i>
                 </button>
-                <button class="control-btn">
+                <button class="control-btn" onclick="nextSong()">
                     <i class="fas fa-step-forward"></i>
                 </button>
             </div>
 
+            <!-- Progress Bar -->
             <div class="progress-section">
-                <span class="time-display" id="currentTime">0:00</span>
-                <div class="progress-bar">
+                <span class="time" id="currentTime">0:00</span>
+                <div class="progress-bar" onclick="seekSong(event)">
                     <div class="progress" id="progress"></div>
                 </div>
-                <span class="time-display" id="totalTime">0:00</span>
+                <span class="time" id="totalTime">0:00</span>
+            </div>
+
+            <!-- Volume Control -->
+            <div class="volume-control">
+                <i class="fas fa-volume-up"></i>
+                <input type="range" id="volumeSlider" min="0" max="100" value="50" onchange="changeVolume(this.value)">
             </div>
         </div>
     </div>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer" preload="metadata"></audio>
 
     <script src="script.js"></script>
 </body>
