@@ -11,9 +11,14 @@
     <!-- Sparkle Background -->
     <div class="sparkle-bg" id="sparkleBg"></div>
 
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-icon">A</div>
                 <div class="logo-text">APNA MUSIC</div>
@@ -52,7 +57,8 @@
             <div class="top-bar">
                 <div class="search-container">
                     <div class="glowing-input">
-                        <input type="text" id="searchInput" placeholder="What do you want to listen to?">
+                        <input type="text" id="searchInput" placeholder="Koi bhi song search karo... YouTube jaisa" oninput="handleSearch(this.value)">
+                        <span class="search-text" id="searchText"></span>
                     </div>
                 </div>
 
@@ -77,6 +83,14 @@
                 <div class="lyrics-container" id="lyricsContainer">
                     <h3 class="lyrics-title">Now Playing</h3>
                     <div id="lyricsContent"></div>
+                </div>
+            </div>
+
+            <!-- Search Page -->
+            <div class="content-area search-page" id="searchPage" style="display: none;">
+                <h2 class="section-title">Search Results</h2>
+                <div class="songs-grid" id="searchResults">
+                    <!-- Search results will show here -->
                 </div>
             </div>
 
