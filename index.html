@@ -52,7 +52,10 @@
             <div class="top-bar">
                 <div class="search-container">
                     <div class="glowing-input">
-                        <input type="text" id="searchInput" placeholder="What do you want to listen to?">
+                        <input type="text" id="searchInput" placeholder="Search songs, artists..." onkeyup="handleSearch(event)">
+                        <button class="search-btn" onclick="performSearch()">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -71,25 +74,23 @@
                 <h2 class="section-title">Trending Now 🔥</h2>
                 
                 <div class="songs-grid" id="trendingSongs">
-                    <!-- Songs will be loaded here by JavaScript -->
+                    <!-- Songs will be loaded here -->
                 </div>
 
                 <h2 class="section-title" style="margin-top: 30px;">Popular Hindi Songs</h2>
                 <div class="songs-grid" id="popularSongs">
                     <!-- Popular songs will be loaded here -->
                 </div>
-
-                <div class="lyrics-container" id="lyricsContainer">
-                    <h3 class="lyrics-title">Now Playing</h3>
-                    <div id="lyricsContent"></div>
-                </div>
             </div>
 
             <!-- Search Page -->
             <div class="content-area" id="searchPage">
-                <h2 class="section-title">Search Songs</h2>
+                <h2 class="section-title">Search Results</h2>
                 <div class="search-results" id="searchResults">
-                    <p>Type in search bar to find songs from YouTube</p>
+                    <div class="search-placeholder">
+                        <i class="fas fa-search"></i>
+                        <p>Search for your favorite songs</p>
+                    </div>
                 </div>
             </div>
 
@@ -137,7 +138,7 @@
     <div class="music-player" id="musicPlayer">
         <div class="player-controls">
             <div class="song-info">
-                <div class="current-song-image">🎵</div>
+                <img id="nowPlayingImage" src="" alt="Song" class="current-song-image">
                 <div class="song-details">
                     <div class="current-song-title" id="nowPlayingTitle">Select a song</div>
                     <div class="current-song-artist" id="nowPlayingArtist">Artist</div>
@@ -166,10 +167,9 @@
         </div>
     </div>
 
-    <!-- YouTube IFrame API -->
-    <div id="youtubePlayer" style="display: none;"></div>
+    <!-- Audio Element for Fallback -->
+    <audio id="audioPlayer" preload="metadata"></audio>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js"></script>
 </body>
 </html>
