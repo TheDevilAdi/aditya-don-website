@@ -91,7 +91,7 @@
             </div>
 
             <!-- Home Page -->
-            <div class="content-area" id="homePage">
+            <div class="content-area active" id="homePage">
                 <h2 class="section-title">Trending Now 🔥</h2>
                 
                 <div class="songs-grid" id="trendingSongs">
@@ -105,7 +105,7 @@
             </div>
 
             <!-- Search Page -->
-            <div class="content-area" id="searchPage" style="display: none;">
+            <div class="content-area" id="searchPage">
                 <h2 class="section-title">Search Songs</h2>
                 <div class="search-results" id="searchResults">
                     <!-- Search results will appear here -->
@@ -113,7 +113,7 @@
             </div>
 
             <!-- Library Page -->
-            <div class="content-area" id="libraryPage" style="display: none;">
+            <div class="content-area" id="libraryPage">
                 <h2 class="section-title">Your Library</h2>
                 <div class="library-content" id="libraryContent">
                     <p>Your favorite songs will appear here</p>
@@ -121,7 +121,7 @@
             </div>
 
             <!-- Profile Page -->
-            <div class="profile-page" id="profilePage" style="display: none;">
+            <div class="profile-page" id="profilePage">
                 <div class="profile-header">
                     <div class="profile-pic">
                         <i class="fas fa-user"></i>
@@ -185,8 +185,8 @@
         </div>
     </div>
 
-    <!-- YouTube Player Container -->
-    <div id="youtubePlayer" style="display: none;"></div>
+    <!-- Audio Element -->
+    <audio id="audioPlayer" preload="metadata"></audio>
 
     <script src="script.js"></script>
 </body>
