@@ -3,65 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APNA MUSIC</title>
+    <title>APNA MUSIC - Premium Streaming</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">APNA <span>MUSIC</span></div>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search songs, artists...">
-                <button onclick="searchSongs()">🔍</button>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                APNA MUSIC
             </div>
-        </header>
-
-        <main>
-            <section class="trending-section" id="trendingSection">
-                <h2 class="section-title">Trending Music 🔥</h2>
-                <div class="songs-grid" id="trendingSongs">
-                    <!-- Songs load honge yaha -->
+            <div class="search-container">
+                <div class="glowing-input">
+                    <input type="text" id="searchInput" placeholder="Search songs, artists, albums...">
+                    <span class="focus-border"></span>
                 </div>
-            </section>
-
-            <section class="search-results" id="searchResults">
-                <button class="back-button" onclick="showTrending()">← Back to Trending</button>
-                <h2 class="section-title">Search Results</h2>
-                <div class="songs-grid" id="searchResultsGrid">
-                    <!-- Search results yaha aayenge -->
-                </div>
-            </section>
-
-            <div class="loading" id="loading" style="display: none;">
-                Loading songs...
             </div>
-        </main>
+            <div class="nav-user">
+                <button class="premium-btn">Go Premium</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <h1 class="section-title">Trending Now 🔥</h1>
+        
+        <!-- Songs Grid -->
+        <div class="songs-grid" id="trendingSongs">
+            <!-- Songs will be loaded here -->
+        </div>
+
+        <!-- Lyrics Container -->
+        <div class="lyrics-container" id="lyricsContainer">
+            <div id="lyricsContent"></div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="social-container">
+            <div class="icon facebook">
+                <div class="tooltip">Facebook</div>
+                <span><i class="fab fa-facebook-f"></i></span>
+            </div>
+            <div class="icon youtube">
+                <div class="tooltip">YouTube</div>
+                <span><i class="fab fa-youtube"></i></span>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            Loading songs...
+        </div>
     </div>
 
+    <!-- Music Player -->
     <div class="music-player" id="musicPlayer">
         <div class="player-controls">
             <div class="song-info">
-                <div class="song-image">🎵</div>
-                <div>
-                    <div class="song-title" id="nowPlayingTitle">Song Title</div>
-                    <div class="song-artist" id="nowPlayingArtist">Artist</div>
+                <div class="current-song-image">🎵</div>
+                <div class="current-song-details">
+                    <div class="current-song-title" id="nowPlayingTitle">Select a song</div>
+                    <div class="current-song-artist" id="nowPlayingArtist">Artist</div>
                 </div>
             </div>
             
             <div class="control-buttons">
-                <button class="control-btn">⏮</button>
-                <button class="control-btn play-btn" id="playBtn">▶</button>
-                <button class="control-btn">⏭</button>
+                <button class="control-btn"><i class="fas fa-step-backward"></i></button>
+                <button class="control-btn play-btn" id="playBtn"><i class="fas fa-play"></i></button>
+                <button class="control-btn"><i class="fas fa-step-forward"></i></button>
             </div>
 
-            <div class="progress-bar">
-                <div class="progress-container">
+            <div class="progress-section">
+                <span class="time-display" id="currentTime">0:00</span>
+                <div class="progress-bar">
                     <div class="progress" id="progress"></div>
                 </div>
-            </div>
-
-            <div class="volume-control">
-                <button class="control-btn">🔊</button>
+                <span class="time-display" id="totalTime">0:00</span>
             </div>
         </div>
     </div>
