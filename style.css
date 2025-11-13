@@ -188,11 +188,13 @@ html, body {
 .glowing-input {
     position: relative;
     width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .glowing-input input {
     width: 100%;
-    padding: 12px 20px;
+    padding: 12px 50px 12px 20px;
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid transparent;
     border-radius: 25px;
@@ -206,6 +208,23 @@ html, body {
     background: rgba(255, 255, 255, 0.15);
     border-color: var(--primary);
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .user-controls {
@@ -300,6 +319,13 @@ html, body {
     align-items: center;
     justify-content: center;
     font-size: 24px;
+    overflow: hidden;
+}
+
+.song-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .song-info {
@@ -347,51 +373,25 @@ html, body {
     transform: scale(1.1);
 }
 
-/* Lyrics Container */
-.lyrics-container {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 25px;
-    border-radius: 15px;
-    margin-top: 30px;
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    display: none;
+/* Search Results */
+.search-results {
+    min-height: 400px;
 }
 
-.lyrics-container.active {
-    display: block;
+.search-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
 }
 
-.lyrics-title {
-    color: var(--primary);
-    margin-bottom: 15px;
-    font-size: 20px;
+.search-placeholder i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
 }
 
-#lyricsContent {
-    font-size: 16px;
-    line-height: 1.8;
-    color: var(--text);
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.current-word {
-    background: linear-gradient(45deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: bold;
-    padding: 2px 4px;
-    border-radius: 3px;
-    animation: wordGlow 1s ease-in-out infinite alternate;
-}
-
-@keyframes wordGlow {
-    from {
-        text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary);
-    }
-    to {
-        text-shadow: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
-    }
+.search-placeholder p {
+    font-size: 18px;
 }
 
 /* Music Player */
@@ -430,6 +430,13 @@ html, body {
     align-items: center;
     justify-content: center;
     font-size: 18px;
+    overflow: hidden;
+}
+
+.current-song-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .song-details {
@@ -439,11 +446,17 @@ html, body {
 .current-song-title {
     font-weight: 600;
     font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .current-song-artist {
     color: var(--text-secondary);
     font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .control-buttons {
