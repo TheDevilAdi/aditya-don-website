@@ -1,54 +1,116 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
     padding: 20px;
+    font-family: Arial;
+    min-height: 100vh;
 }
 
 .container {
     max-width: 400px;
     margin: 0 auto;
     background: white;
-    border-radius: 20px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.premium-section {
-    padding: 30px 20px;
-    text-align: center;
+.premium-box {
     background: linear-gradient(135deg, #ff6b6b, #ee5a24);
     color: white;
+    padding: 25px 20px;
+    text-align: center;
 }
 
-.premium-section h2 {
-    margin-bottom: 10px;
-    font-size: 24px;
+.premium-box h2 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
 }
 
-.premium-section p {
-    margin-bottom: 20px;
+.premium-box p {
+    margin: 0 0 20px 0;
     opacity: 0.9;
 }
 
-.premium-options {
+.checkboxes {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
 }
 
-.option {
+.checkboxes label {
     display: flex;
     align-items: center;
+    gap: 8px;
+}
+
+.search-bar {
+    padding: 20px;
+    background: white;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+}
+
+.search-bar input:focus {
+    border-color: #ff6b6b;
+    outline: none;
+}
+
+.login-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 20px 20px;
+    padding: 12px;
+    background: transparent;
+    border: 2px solid #ff6b6b;
+    border-radius: 25px;
+    color: #ff6b6b;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.trending {
+    padding: 0 20px 20px 20px;
+}
+
+.trending h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.songs {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
-.option input[type="checkbox"] {
-    width:p
+.song {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.song:hover {
+    background: #f5f5f5;
+}
+
+.song-name {
+    display: block;
+    font-weight: bold;
+    color: #333;
+}
+
+.artist {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
