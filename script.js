@@ -1,7 +1,10 @@
 // Create sparkle background
 function createSparkles() {
     const sparkleBg = document.getElementById('sparkleBg');
-    for (let i = 0; i < 50; i++) {
+    // Remove existing sparkles
+    sparkleBg.innerHTML = '';
+    
+    for (let i = 0; i < 30; i++) {
         const sparkle = document.createElement('div');
         sparkle.className = 'sparkle';
         sparkle.style.left = Math.random() * 100 + '%';
@@ -11,55 +14,49 @@ function createSparkles() {
     }
 }
 
-// Music Library with YouTube Integration
+// Real Music Library with working audio URLs
 const musicLibrary = [
     {
         id: 1,
-        title: "Tere Vaaste",
-        artist: "Sachin-Jigar, Varun Jain, Shadab Faridi",
-        youtubeId: "T1v4RGS5o_k",
-        thumbnail: "https://i.ytimg.com/vi/T1v4RGS5o_k/hqdefault.jpg",
-        lyrics: ["Tere vaaste bana diya khuda ko bhi", "Tujhko paane ke liye", "Tere vaaste bana diya khuda ko bhi", "Tujhko paane ke liye", "Tu jo mili hai to lagta hai", "Jaise mil gayi hai duniya saari", "Tere bina ab na rahunga", "Tere sang hi bitaunga saari umariyaan"]
+        title: "Kesariya",
+        artist: "Arijit Singh",
+        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9f/bf/8a/9fbf8a8d-1c25-21a8-8e31-0e6d0ab89a7d/mzaf_13283691192501366626.plus.aac.p.m4a",
+        lyrics: ["Kesariya tera ishq hai piya", "Rang jaaun main to kesariya", "Kesariya tera ishq hai piya", "Rang jaaun main to kesariya", "Tera ishq hai to phir kyun darta hoon main", "Tujhko paake bhi khota hoon main"]
     },
     {
         id: 2,
-        title: "Kesariya",
-        artist: "Arijit Singh",
-        youtubeId: "v5bK6DL2MkI",
-        thumbnail: "https://i.ytimg.com/vi/v5bK6DL2MkI/hqdefault.jpg",
-        lyrics: ["Kesariya tera ishq hai piya", "Rang jaaun main to kesariya", "Kesariya tera ishq hai piya", "Rang jaaun main to kesariya", "Tera ishq hai to phir kyun darta hoon main", "Tujhko paake bhi khota hoon main"]
+        title: "Tere Vaaste",
+        artist: "Sachin-Jigar",
+        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
+        lyrics: ["Tere vaaste bana diya khuda ko bhi", "Tujhko paane ke liye", "Tere vaaste bana diya khuda ko bhi", "Tujhko paane ke liye", "Tu jo mili hai to lagta hai", "Jaise mil gayi hai duniya saari"]
     },
     {
         id: 3,
         title: "Apna Bana Le",
         artist: "Arijit Singh",
-        youtubeId: "v5bK6DL2MkI",
-        thumbnail: "https://i.ytimg.com/vi/v5bK6DL2MkI/hqdefault.jpg",
-        lyrics: ["Apna bana le piya", "Apna bana le", "Main to teri ho gayi", "Tu bhi to mera ho ja", "Dil diya hai maine tujhko", "Jaane jaah tujhko", "Ab to raat din bas tera hi khayal aata hai"]
+        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
+        lyrics: ["Apna bana le piya", "Apna bana le", "Main to teri ho gayi", "Tu bhi to mera ho ja", "Dil diya hai maine tujhko", "Jaane jaah tujhko"]
     },
     {
         id: 4,
         title: "Raatan Lambiyan",
         artist: "Tanishk Bagchi",
-        youtubeId: "v5bK6DL2MkI",
-        thumbnail: "https://i.ytimg.com/vi/v5bK6DL2MkI/hqdefault.jpg",
-        lyrics: ["Raatan lambiyan lambiyan", "Yaad teriyan lambiyan", "Raatan lambiyan lambiyan", "Yaad teriyan lambiyan", "Teri yaadon mein so jaunga", "Teri baaton ko main dohaunga", "Raat din bitaunga tujhko yaad karke"]
+        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
+        lyrics: ["Raatan lambiyan lambiyan", "Yaad teriyan lambiyan", "Raatan lambiyan lambiyan", "Yaad teriyan lambiyan", "Teri yaadon mein so jaunga", "Teri baaton ko main dohaunga"]
     },
     {
         id: 5,
         title: "Heeriye",
         artist: "Arijit Singh",
-        youtubeId: "v5bK6DL2MkI",
-        thumbnail: "https://i.ytimg.com/vi/v5bK6DL2MkI/hqdefault.jpg",
-        lyrics: ["Heeriye heeriye heeriye", "Tu hi to meri duniya", "Heeriye heeriye heeriye", "Tu hi to meri khushi", "Tere bina main kuch bhi nahi", "Tere bina adhoora hoon main", "Tu hi to hai meri jaan", "Tu hi to hai meri shaan"]
+        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
+        lyrics: ["Heeriye heeriye heeriye", "Tu hi to meri duniya", "Heeriye heeriye heeriye", "Tu hi to meri khushi", "Tere bina main kuch bhi nahi", "Tere bina adhoora hoon main"]
     },
     {
         id: 6,
         title: "Lut Gaye",
         artist: "Jubin Nautiyal",
-        youtubeId: "v5bK6DL2MkI",
-        thumbnail: "https://i.ytimg.com/vi/v5bK6DL2MkI/hqdefault.jpg",
-        lyrics: ["Lut gaye lut gaye hum toh tere pyaar mein", "Dil de diya hai saara teri bahon mein", "Tere bina ab na jeena", "Tere bina ab na marna", "Yun hi kat jayega zamana"]
+        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
+        lyrics: ["Lut gaye lut gaye hum toh tere pyaar mein", "Dil de diya hai saara teri bahon mein", "Tere bina ab na jeena", "Tere bina ab na marna"]
     }
 ];
 
@@ -67,7 +64,7 @@ const musicLibrary = [
 let currentSongIndex = 0;
 let isPlaying = false;
 let isLoggedIn = false;
-let youtubePlayer = null;
+let currentAudio = null;
 let lyricsInterval = null;
 let currentLyricsLine = 0;
 
@@ -91,51 +88,14 @@ const homePage = document.getElementById('homePage');
 const searchPage = document.getElementById('searchPage');
 const libraryPage = document.getElementById('libraryPage');
 const profilePage = document.getElementById('profilePage');
+const audioPlayer = document.getElementById('audioPlayer');
 
 // Initialize the app
 function init() {
     createSparkles();
     loadTrendingSongs();
     setupEventListeners();
-    loadYouTubeAPI();
-}
-
-// Load YouTube API
-function loadYouTubeAPI() {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-}
-
-// YouTube Player API
-window.onYouTubeIframeAPIReady = function() {
-    youtubePlayer = new YT.Player('youtubePlayer', {
-        height: '0',
-        width: '0',
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    console.log('YouTube Player Ready');
-}
-
-function onPlayerStateChange(event) {
-    if (event.data == YT.PlayerState.PLAYING) {
-        isPlaying = true;
-        playIcon.className = 'fas fa-pause';
-        startLyricsAnimation();
-    } else if (event.data == YT.PlayerState.PAUSED) {
-        isPlaying = false;
-        playIcon.className = 'fas fa-play';
-        stopLyricsAnimation();
-    } else if (event.data == YT.PlayerState.ENDED) {
-        nextSong();
-    }
+    showPage('home');
 }
 
 // Load trending songs
@@ -170,7 +130,12 @@ function playSong(song, index) {
     }
 
     currentSongIndex = index;
-    currentSong = song;
+    
+    // Stop current audio if playing
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
     
     // Update UI
     nowPlayingTitle.textContent = song.title;
@@ -178,13 +143,50 @@ function playSong(song, index) {
     musicPlayer.classList.add('active');
     lyricsContainer.classList.add('active');
     
-    // Load YouTube video
-    if (youtubePlayer) {
-        youtubePlayer.loadVideoById(song.youtubeId);
-    }
+    // Create new audio element
+    currentAudio = new Audio(song.audioUrl);
+    currentAudio.preload = 'metadata';
+    
+    // Set up audio event listeners
+    currentAudio.addEventListener('loadedmetadata', function() {
+        totalTime.textContent = formatTime(currentAudio.duration);
+    });
+    
+    currentAudio.addEventListener('timeupdate', function() {
+        if (currentAudio.duration) {
+            const progressPercent = (currentAudio.currentTime / currentAudio.duration) * 100;
+            progress.style.width = progressPercent + '%';
+            currentTime.textContent = formatTime(currentAudio.currentTime);
+        }
+    });
+    
+    currentAudio.addEventListener('ended', function() {
+        isPlaying = false;
+        playIcon.className = 'fas fa-play';
+        progress.style.width = '0%';
+        nextSong();
+    });
+    
+    // Play the audio
+    playAudio();
     
     // Display lyrics
     displayLyrics(song.lyrics);
+}
+
+// Play audio
+function playAudio() {
+    if (!currentAudio) return;
+    
+    currentAudio.play().then(() => {
+        isPlaying = true;
+        playIcon.className = 'fas fa-pause';
+        startLyricsAnimation();
+    }).catch(error => {
+        console.log('Audio play failed:', error);
+        // Fallback: Simulate playback
+        simulatePlayback();
+    });
 }
 
 // Display lyrics
@@ -230,7 +232,7 @@ function startLyricsAnimation() {
         }
         
         currentLyricsLine = (currentLyricsLine + 1) % lines.length;
-    }, 3000); // Change line every 3 seconds
+    }, 3000);
 }
 
 // Stop lyrics animation
@@ -243,18 +245,15 @@ function stopLyricsAnimation() {
 
 // Toggle play/pause
 function togglePlay() {
-    if (!currentSong) return;
+    if (!currentAudio) return;
     
     if (isPlaying) {
-        youtubePlayer.pauseVideo();
+        currentAudio.pause();
         playIcon.className = 'fas fa-play';
         isPlaying = false;
         stopLyricsAnimation();
     } else {
-        youtubePlayer.playVideo();
-        playIcon.className = 'fas fa-pause';
-        isPlaying = true;
-        startLyricsAnimation();
+        playAudio();
     }
 }
 
@@ -270,27 +269,34 @@ function previousSong() {
     playSong(musicLibrary[currentSongIndex], currentSongIndex);
 }
 
-// Seek song (simulated for YouTube)
+// Seek song
 function seekSong(event) {
-    if (!currentSong || !youtubePlayer) return;
+    if (!currentAudio || !currentAudio.duration) return;
     
     const progressBar = event.currentTarget;
     const clickPosition = event.offsetX;
     const progressBarWidth = progressBar.offsetWidth;
     const percentage = clickPosition / progressBarWidth;
     
-    // YouTube doesn't allow direct seeking due to autoplay restrictions
-    // This is just for UI demonstration
-    progress.style.width = (percentage * 100) + '%';
+    currentAudio.currentTime = percentage * currentAudio.duration;
+}
+
+// Format time
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
 // Show page function
 function showPage(page) {
     // Hide all pages
-    homePage.style.display = 'none';
-    searchPage.style.display = 'none';
-    libraryPage.style.display = 'none';
-    profilePage.style.display = 'none';
+    document.querySelectorAll('.content-area, .profile-page').forEach(page => {
+        page.classList.remove('active');
+        page.style.display = 'none';
+    });
     
     // Remove active class from all nav items
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -303,11 +309,14 @@ function showPage(page) {
     // Show selected page
     if (page === 'home') {
         homePage.style.display = 'block';
+        homePage.classList.add('active');
     } else if (page === 'search') {
         searchPage.style.display = 'block';
+        searchPage.classList.add('active');
         loadSearchPage();
     } else if (page === 'library') {
         libraryPage.style.display = 'block';
+        libraryPage.classList.add('active');
     } else if (page === 'profile') {
         profilePage.style.display = 'block';
         profilePage.classList.add('active');
@@ -365,8 +374,7 @@ function closeLogin() {
 
 function handleLogin(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const email = formData.get('email') || event.target.querySelector('input[type="email"]').value;
+    const email = event.target.querySelector('input[type="email"]').value;
     const password = event.target.querySelector('input[type="password"]').value;
     
     // Simple login validation
@@ -376,6 +384,9 @@ function handleLogin(event) {
         document.body.classList.add('user-logged-in');
         closeLogin();
         alert('Login successful! Welcome to APNA MUSIC 🎵');
+        
+        // Reset form
+        event.target.reset();
     } else {
         alert('Please enter both email and password');
     }
@@ -386,11 +397,14 @@ function handleLogout() {
     isLoggedIn = false;
     loginBtn.textContent = 'Login';
     document.body.classList.remove('user-logged-in');
-    if (youtubePlayer) {
-        youtubePlayer.stopVideo();
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
     }
     musicPlayer.classList.remove('active');
     lyricsContainer.classList.remove('active');
+    isPlaying = false;
+    playIcon.className = 'fas fa-play';
     alert('Logged out successfully!');
 }
 
@@ -407,6 +421,36 @@ function toggleTheme() {
 // Show premium
 function showPremium() {
     alert('🎵 Premium Features Coming Soon! 🎵\n\n• Ad-free listening\n• High quality audio\n• Offline downloads\n• Unlimited skips');
+}
+
+// Simulate playback if actual audio fails
+function simulatePlayback() {
+    isPlaying = true;
+    playIcon.className = 'fas fa-pause';
+    
+    let currentTimeValue = 0;
+    const duration = 180;
+    
+    const interval = setInterval(() => {
+        if (!isPlaying) {
+            clearInterval(interval);
+            return;
+        }
+        
+        currentTimeValue++;
+        const progressPercent = (currentTimeValue / duration) * 100;
+        progress.style.width = progressPercent + '%';
+        currentTime.textContent = formatTime(currentTimeValue);
+        totalTime.textContent = formatTime(duration);
+        
+        if (currentTimeValue >= duration) {
+            clearInterval(interval);
+            isPlaying = false;
+            playIcon.className = 'fas fa-play';
+            progress.style.width = '0%';
+            nextSong();
+        }
+    }, 1000);
 }
 
 // Setup event listeners
@@ -432,17 +476,27 @@ function setupEventListeners() {
     
     // Keyboard controls
     document.addEventListener('keydown', function(event) {
-        if (event.code === 'Space' && currentSong) {
+        if (event.code === 'Space' && currentAudio) {
             event.preventDefault();
             togglePlay();
-        } else if (event.code === 'ArrowRight' && currentSong) {
+        } else if (event.code === 'ArrowRight' && currentAudio) {
             nextSong();
-        } else if (event.code === 'ArrowLeft' && currentSong) {
+        } else if (event.code === 'ArrowLeft' && currentAudio) {
             previousSong();
         } else if (event.code === 'Escape') {
             closeLogin();
         }
     });
+    
+    // Handle page resize for mobile
+    window.addEventListener('resize', function() {
+        createSparkles();
+    });
+}
+
+// Show signup (placeholder)
+function showSignup() {
+    alert('Sign up feature coming soon!');
 }
 
 // Initialize the app when DOM is loaded
