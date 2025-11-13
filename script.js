@@ -107,6 +107,8 @@ const lyricsContent = document.getElementById('lyricsContent');
 const currentSongImage = document.getElementById('currentSongImage');
 const miniSongImage = document.getElementById('miniSongImage');
 const searchInput = document.getElementById('searchInput');
+const searchText = document.getElementById('searchText');
+const themeBtn = document.getElementById('themeBtn');
 
 let currentSong = null;
 let isPlaying = false;
@@ -122,6 +124,18 @@ function init() {
 // Load songs to grid
 function loadSongs(songs = musicLibrary) {
     songsGrid.innerHTML = '';
+    
+    if (songs.length === 0) {
+        songsGrid.innerHTML = `
+            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary);">
+                <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                <h3 style="margin-bottom: 10px;">No songs found</h3>
+                <p>Try searching with different keywords</p>
+            </div>
+        `;
+        return;
+    }
+    
     songs.forEach(song => {
         const songCard = createSongCard(song);
         songsGrid.appendChild(songCard);
@@ -293,6 +307,18 @@ function showPage(pageId) {
     }
 }
 
+// Theme toggle
+function toggleTheme() {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.body.setAttribute('data-theme', newTheme);
+    themeBtn.innerHTML = newTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    
+    // Save theme preference
+    localStorage.setItem('theme', newTheme);
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Nav links
@@ -319,6 +345,14 @@ function setupEventListeners() {
     searchInput.addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase().trim();
         
+        // Show search text
+        if (query) {
+            searchText.textContent = `Searching for: "${query}"`;
+            searchText.classList.add('show');
+        } else {
+            searchText.classList.remove('show');
+        }
+        
         if (query === '') {
             loadSongs();
             return;
@@ -331,6 +365,9 @@ function setupEventListeners() {
 
         loadSongs(filteredSongs);
     });
+
+    // Theme toggle
+    themeBtn.addEventListener('click', toggleTheme);
 
     // Progress bar click to seek
     document.querySelector('.progress-bar').addEventListener('click', function(e) {
@@ -362,5 +399,13 @@ function setupEventListeners() {
     });
 }
 
+// Load saved theme
+function loadSavedTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    themeBtn.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+}
+
 // Initialize the app
+loadSavedTheme();
 init();
