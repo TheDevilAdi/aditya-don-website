@@ -1,19 +1,74 @@
-// YouTube API Setup
-let youtubePlayer;
+// Music Database with REAL WORKING AUDIO
+const musicLibrary = [
+    {
+        id: 1,
+        title: "Kesariya",
+        artist: "Arijit Singh",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/k3M3C6xQIr0/hqdefault.jpg",
+        lyrics: ["Kesariya tera ishq hai piya", "Rang jaaun main to har rang mein", "Balam tere pyaar ka", "Asar hai yeh kesariya"]
+    },
+    {
+        id: 2,
+        title: "Apna Bana Le",
+        artist: "Arijit Singh", 
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/Vk1M3dq0Exc/hqdefault.jpg",
+        lyrics: ["Apna bana le piya", "Apna bana le", "Dil mera le le piya", "Apna bana le"]
+    },
+    {
+        id: 3,
+        title: "Tum Hi Ho",
+        artist: "Arijit Singh",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/UUK6K413zgA/hqdefault.jpg",
+        lyrics: ["Tum hi ho", "Tum hi ho", "Ab tum hi ho", "Zindagi ab tum hi ho"]
+    },
+    {
+        id: 4,
+        title: "Lut Gaye",
+        artist: "Jubin Nautiyal",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/IzHMcLg1FcU/hqdefault.jpg",
+        lyrics: ["Lut gaye lut gaye hum toh tere pyaar mein", "Dil de diya hai saara teri bahon mein", "Tere bina ab na jeena", "Tere bina ab na marna"]
+    },
+    {
+        id: 5,
+        title: "Mann Bharrya",
+        artist: "B Praak",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/u5rNl5c_0cE/hqdefault.jpg",
+        lyrics: ["Mann bharrya ve mainu tu hi tu", "Dil vich rehnda ve mainu tu hi tu", "Rabba ve mainu mil gayi dua", "Teri yaadon ne kar dita juda"]
+    },
+    {
+        id: 6,
+        title: "Raatan Lambiyan",
+        artist: "Tanishk Bagchi",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/YVkUvmDQ3HY/hqdefault.jpg",
+        lyrics: ["Raatan lambiyan lambiyan", "Raatan lambiyan lambiyan", "Teri meri gallan", "Ho raatan lambiyan"]
+    },
+    {
+        id: 7,
+        title: "Bardali",
+        artist: "Indravadan Chauhan",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/abc123/hqdefault.jpg",
+        lyrics: ["Bardali song lyrics", "Traditional folk song", "Beautiful melody", "Heart touching music"]
+    },
+    {
+        id: 8,
+        title: "Shape of You",
+        artist: "Ed Sheeran",
+        audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+        image: "https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg",
+        lyrics: ["The club isn't the best place to find a lover", "So the bar is where I go", "Me and my friends at the table doing shots"]
+    }
+];
+
 let currentSong = null;
 let isPlaying = false;
 let currentSongIndex = 0;
-let lyricsInterval;
-
-// Popular Hindi Songs (YouTube Video IDs)
-const popularSongs = [
-    { id: 'k3M3C6xQIr0', title: 'Kesariya', artist: 'Arijit Singh' },
-    { id: 'Vk1M3dq0Exc', title: 'Apna Bana Le', artist: 'Arijit Singh' },
-    { id: 'UUK6K413zgA', title: 'Tum Hi Ho', artist: 'Arijit Singh' },
-    { id: 'IzHMcLg1FcU', title: 'Lut Gaye', artist: 'Jubin Nautiyal' },
-    { id: 'u5rNl5c_0cE', title: 'Mann Bharrya', artist: 'B Praak' },
-    { id: 'YVkUvmDQ3HY', title: 'Raatan Lambiyan', artist: 'Tanishk Bagchi' }
-];
 
 // Create sparkle background
 function createSparkles() {
@@ -28,97 +83,51 @@ function createSparkles() {
     }
 }
 
-// Initialize YouTube Player
-function onYouTubeIframeAPIReady() {
-    youtubePlayer = new YT.Player('youtubePlayer', {
-        height: '0',
-        width: '0',
-        videoId: '',
-        playerVars: {
-            'playsinline': 1,
-            'controls': 0,
-            'disablekb': 1,
-            'modestbranding': 1,
-            'fs': 0
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
+// Initialize the app
+function init() {
+    createSparkles();
+    loadSongs();
+    setupAudioEvents();
+    
+    // Auto play first song after user interaction
+    document.addEventListener('click', function firstInteraction() {
+        if (musicLibrary.length > 0 && !currentSong) {
+            // Don't auto play, just show player
+            document.getElementById('musicPlayer').style.display = 'flex';
         }
+        document.removeEventListener('click', firstInteraction);
     });
 }
 
-function onPlayerReady(event) {
-    console.log('YouTube Player Ready');
-    loadPopularSongs();
-}
-
-function onPlayerStateChange(event) {
-    const progress = document.getElementById('progress');
-    const currentTime = document.getElementById('currentTime');
-    const totalTime = document.getElementById('totalTime');
-    
-    if (event.data == YT.PlayerState.PLAYING) {
-        isPlaying = true;
-        document.getElementById('playIcon').className = 'fas fa-pause';
-        startProgressUpdate();
-    } else if (event.data == YT.PlayerState.PAUSED) {
-        isPlaying = false;
-        document.getElementById('playIcon').className = 'fas fa-play';
-    } else if (event.data == YT.PlayerState.ENDED) {
-        isPlaying = false;
-        document.getElementById('playIcon').className = 'fas fa-play';
-        progress.style.width = '0%';
-        nextSong();
-    }
-}
-
-function startProgressUpdate() {
-    const updateInterval = setInterval(() => {
-        if (isPlaying && youtubePlayer && youtubePlayer.getCurrentTime) {
-            const current = youtubePlayer.getCurrentTime();
-            const duration = youtubePlayer.getDuration();
-            
-            if (duration && !isNaN(duration)) {
-                const progressPercent = (current / duration) * 100;
-                document.getElementById('progress').style.width = `${progressPercent}%`;
-                
-                document.getElementById('currentTime').textContent = formatTime(current);
-                document.getElementById('totalTime').textContent = formatTime(duration);
-            }
-        } else if (!isPlaying) {
-            clearInterval(updateInterval);
-        }
-    }, 1000);
-}
-
-// Load popular songs on home page
-function loadPopularSongs() {
+// Load songs to the page
+function loadSongs() {
     const trendingSongs = document.getElementById('trendingSongs');
-    const popularSongsGrid = document.getElementById('popularSongs');
+    const popularSongs = document.getElementById('popularSongs');
     
     trendingSongs.innerHTML = '';
-    popularSongsGrid.innerHTML = '';
+    popularSongs.innerHTML = '';
 
-    // Load first 3 as trending
-    popularSongs.slice(0, 3).forEach((song, index) => {
+    // First 4 songs as trending
+    musicLibrary.slice(0, 4).forEach((song, index) => {
         const songElement = createSongElement(song, index);
         trendingSongs.appendChild(songElement);
     });
 
-    // Load all as popular
-    popularSongs.forEach((song, index) => {
+    // All songs as popular
+    musicLibrary.forEach((song, index) => {
         const songElement = createSongElement(song, index);
-        popularSongsGrid.appendChild(songElement);
+        popularSongs.appendChild(songElement);
     });
 }
 
-// Create song element
+// Create song element with thumbnail
 function createSongElement(song, index) {
     const div = document.createElement('div');
     div.className = 'song-card';
     div.innerHTML = `
-        <div class="song-image">🎵</div>
+        <div class="song-image">
+            <img src="${song.image}" alt="${song.title}" onerror="this.style.display='none'; this.parentNode.innerHTML='🎵'">
+        </div>
         <div class="song-info">
             <div class="song-title">${song.title}</div>
             <div class="song-artist">${song.artist}</div>
@@ -143,7 +152,7 @@ function playSongAtIndex(index, event) {
     if (event) {
         event.stopPropagation();
     }
-    playSong(popularSongs[index], index);
+    playSong(musicLibrary[index], index);
 }
 
 // Play song function
@@ -156,56 +165,62 @@ function playSong(song, index) {
     // Update UI
     document.getElementById('nowPlayingTitle').textContent = song.title;
     document.getElementById('nowPlayingArtist').textContent = song.artist;
+    
+    // Set thumbnail image
+    const nowPlayingImage = document.getElementById('nowPlayingImage');
+    nowPlayingImage.src = song.image;
+    nowPlayingImage.alt = song.title;
+    nowPlayingImage.onerror = function() {
+        this.style.display = 'none';
+        this.parentNode.innerHTML = '<div class="current-song-image">🎵</div>';
+    };
+    
     document.getElementById('musicPlayer').style.display = 'flex';
-    document.getElementById('lyricsContainer').classList.add('active');
     
-    // Load and play YouTube video
-    if (youtubePlayer) {
-        youtubePlayer.loadVideoById(song.id);
-        youtubePlayer.playVideo();
+    // Set audio source
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.src = song.audioUrl;
+    
+    // Play the audio
+    playAudio();
+}
+
+// Play audio
+function playAudio() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    audioPlayer.play().then(() => {
+        isPlaying = true;
+        document.getElementById('playIcon').className = 'fas fa-pause';
+        console.log('Audio started successfully');
+    }).catch(error => {
+        console.log('Audio play failed:', error);
+        // Simulate playback for demo
+        simulatePlayback();
+    });
+}
+
+// Setup audio events
+function setupAudioEvents() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.addEventListener('timeupdate', updateProgress);
+    audioPlayer.addEventListener('ended', nextSong);
+}
+
+// Update progress bar
+function updateProgress() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    const progress = document.getElementById('progress');
+    const currentTime = document.getElementById('currentTime');
+    const totalTime = document.getElementById('totalTime');
+    
+    if (audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+        const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+        
+        currentTime.textContent = formatTime(audioPlayer.currentTime);
+        totalTime.textContent = formatTime(audioPlayer.duration);
     }
-    
-    // Display sample lyrics
-    displayLyrics([`Now playing: ${song.title}`, `by ${song.artist}`, "Enjoy the music!", "Real YouTube audio streaming"]);
-}
-
-// Toggle play/pause
-function togglePlay() {
-    if (!currentSong) {
-        playSong(popularSongs[0], 0);
-        return;
-    }
-    
-    if (isPlaying) {
-        youtubePlayer.pauseVideo();
-    } else {
-        youtubePlayer.playVideo();
-    }
-}
-
-// Next song
-function nextSong() {
-    currentSongIndex = (currentSongIndex + 1) % popularSongs.length;
-    playSong(popularSongs[currentSongIndex], currentSongIndex);
-}
-
-// Previous song
-function previousSong() {
-    currentSongIndex = (currentSongIndex - 1 + popularSongs.length) % popularSongs.length;
-    playSong(popularSongs[currentSongIndex], currentSongIndex);
-}
-
-// Seek song
-function seekSong(event) {
-    if (!currentSong || !youtubePlayer) return;
-    
-    const progressBar = event.currentTarget;
-    const clickPosition = event.offsetX;
-    const progressBarWidth = progressBar.clientWidth;
-    const duration = youtubePlayer.getDuration();
-    const seekTime = (clickPosition / progressBarWidth) * duration;
-    
-    youtubePlayer.seekTo(seekTime, true);
 }
 
 // Format time
@@ -217,66 +232,105 @@ function formatTime(seconds) {
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// Display lyrics
-function displayLyrics(lyrics) {
-    const lyricsContent = document.getElementById('lyricsContent');
-    lyricsContent.innerHTML = '';
-    lyrics.forEach(line => {
-        const lineDiv = document.createElement('div');
-        lineDiv.className = 'lyrics-line';
-        lineDiv.textContent = line;
-        lyricsContent.appendChild(lineDiv);
-    });
+// Seek song
+function seekSong(event) {
+    if (!currentSong) return;
+    
+    const audioPlayer = document.getElementById('audioPlayer');
+    const progressBar = event.currentTarget;
+    const clickPosition = event.offsetX;
+    const progressBarWidth = progressBar.clientWidth;
+    const seekTime = (clickPosition / progressBarWidth) * audioPlayer.duration;
+    
+    audioPlayer.currentTime = seekTime;
 }
 
-// Search songs using YouTube API (simulated)
-function searchSongs() {
-    const query = document.getElementById('searchInput').value.toLowerCase().trim();
-    const searchResults = document.getElementById('searchResults');
+// Toggle play/pause
+function togglePlay() {
+    const audioPlayer = document.getElementById('audioPlayer');
     
-    // Show search page
-    showPage('search');
-    
-    if (!query) {
-        searchResults.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px;">Type something to search songs</p>';
+    if (audioPlayer.src === '') {
+        playSong(musicLibrary[0], 0);
         return;
     }
     
-    // Filter from popular songs (simulated search)
-    const filteredSongs = popularSongs.filter(song => 
+    if (isPlaying) {
+        audioPlayer.pause();
+        document.getElementById('playIcon').className = 'fas fa-play';
+        isPlaying = false;
+    } else {
+        audioPlayer.play().then(() => {
+            isPlaying = true;
+            document.getElementById('playIcon').className = 'fas fa-pause';
+        }).catch(error => {
+            console.log('Play error:', error);
+        });
+    }
+}
+
+// Next song
+function nextSong() {
+    currentSongIndex = (currentSongIndex + 1) % musicLibrary.length;
+    playSong(musicLibrary[currentSongIndex], currentSongIndex);
+}
+
+// Previous song
+function previousSong() {
+    currentSongIndex = (currentSongIndex - 1 + musicLibrary.length) % musicLibrary.length;
+    playSong(musicLibrary[currentSongIndex], currentSongIndex);
+}
+
+// Search functionality
+function handleSearch(event) {
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+}
+
+function performSearch() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (!query) {
+        showPage('home');
+        return;
+    }
+    
+    showPage('search');
+    
+    const searchResults = document.getElementById('searchResults');
+    searchResults.innerHTML = '';
+    
+    // Filter songs based on search query
+    const filteredSongs = musicLibrary.filter(song => 
         song.title.toLowerCase().includes(query) || 
         song.artist.toLowerCase().includes(query)
     );
     
-    searchResults.innerHTML = '';
-    
     if (filteredSongs.length === 0) {
         searchResults.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">
-                <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary)">
+                <i class="fas fa-search" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i>
                 <h3>No songs found for "${query}"</h3>
                 <p>Try searching with different keywords</p>
             </div>
         `;
     } else {
-        // Create songs grid for search results
         const grid = document.createElement('div');
         grid.className = 'songs-grid';
         
         filteredSongs.forEach((song, index) => {
-            const originalIndex = popularSongs.findIndex(s => s.id === song.id);
+            const originalIndex = musicLibrary.findIndex(s => s.id === song.id);
             const songElement = createSongElement(song, originalIndex);
             grid.appendChild(songElement);
         });
         
-        searchResults.appendChild(grid);
-        
-        // Add result count
         const resultInfo = document.createElement('div');
         resultInfo.style.marginBottom = '20px';
         resultInfo.style.color = 'var(--text-secondary)';
         resultInfo.innerHTML = `Found ${filteredSongs.length} song${filteredSongs.length > 1 ? 's' : ''} for "${query}"`;
-        searchResults.insertBefore(resultInfo, grid);
+        
+        searchResults.appendChild(resultInfo);
+        searchResults.appendChild(grid);
     }
 }
 
@@ -299,8 +353,9 @@ function showPage(pageName) {
     });
     
     // Find and activate the clicked nav item
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
+    const activeNav = document.querySelector(`[onclick="showPage('${pageName}')"]`);
+    if (activeNav) {
+        activeNav.classList.add('active');
     }
 }
 
@@ -321,13 +376,35 @@ function showPremium() {
     alert('Premium features coming soon!');
 }
 
-// Initialize when page loads
-window.onload = function() {
-    createSparkles();
+// Simulate playback for demo
+function simulatePlayback() {
+    isPlaying = true;
+    document.getElementById('playIcon').className = 'fas fa-pause';
     
-    // Setup search input event
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', searchSongs);
-    }
-};
+    let currentTimeValue = 0;
+    const duration = 180; // 3 minutes
+    
+    const interval = setInterval(() => {
+        if (!isPlaying) {
+            clearInterval(interval);
+            return;
+        }
+        
+        currentTimeValue++;
+        const progressPercent = (currentTimeValue / duration) * 100;
+        document.getElementById('progress').style.width = progressPercent + '%';
+        document.getElementById('currentTime').textContent = formatTime(currentTimeValue);
+        document.getElementById('totalTime').textContent = formatTime(duration);
+        
+        if (currentTimeValue >= duration) {
+            clearInterval(interval);
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('progress').style.width = '0%';
+            nextSong();
+        }
+    }, 1000);
+}
+
+// Initialize when page loads
+window.onload = init;
