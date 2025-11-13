@@ -1,50 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Player</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Premium Features Section -->
-        <div class="premium-section">
+        <!-- Premium Section -->
+        <div class="premium-box">
             <h2>Premium Features</h2>
             <p>Listen without limits. Try Premium for better experience.</p>
-            
-            <div class="premium-options">
-                <div class="option">
-                    <input type="checkbox" id="try-premium">
-                    <label for="try-premium">Try Premium</label>
-                </div>
-                <div class="option">
-                    <input type="checkbox" id="profile" checked>
-                    <label for="profile">Profile</label>
-                </div>
+            <div class="checkboxes">
+                <label><input type="checkbox"> Try Premium</label>
+                <label><input type="checkbox" checked> Profile</label>
             </div>
         </div>
 
         <!-- Search Bar -->
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search songs, artists..." class="search-box">
+            <input type="text" id="searchInput" placeholder="Search songs, artists..." onkeyup="searchSongs()">
         </div>
 
         <!-- Login Button -->
-        <div class="login-section">
-            <button class="login-btn">Login</button>
-        </div>
+        <button class="login-btn">Login</button>
 
         <!-- Trending Now -->
-        <div class="trending-section">
-            <h3 class="section-title">Trending Now</h3>
-            <div class="song-list" id="songList">
-                <!-- Songs will be loaded here -->
+        <div class="trending">
+            <h3>Trending Now</h3>
+            <div class="songs" id="songList">
+                <!-- Songs yahan load honge -->
             </div>
         </div>
 
         <!-- Audio Player -->
-        <audio id="audioPlayer" controls style="display: none;"></audio>
+        <audio id="audioPlayer" hidden></audio>
     </div>
 
     <script src="script.js"></script>
