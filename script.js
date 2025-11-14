@@ -18,53 +18,6 @@ function createSparkles() {
 let isPlaying = false;
 let currentSongIndex = 0;
 let currentYouTubeResults = [];
-let currentAudio = null;
-
-// Copyright-free real music library
-const realMusicLibrary = [
-    {
-        id: 1,
-        title: "Chill Lofi Beat",
-        artist: "Lofi Producer", 
-        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-chill-lofi-beat-28.mp3",
-        duration: "2:45"
-    },
-    {
-        id: 2,
-        title: "Hip Hop Beat",
-        artist: "Hip Hop Maker",
-        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-beat-26.mp3", 
-        duration: "3:15"
-    },
-    {
-        id: 3, 
-        title: "Synthwave Beat",
-        artist: "Synthwave Creator",
-        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-synthwave-beat-26.mp3",
-        duration: "2:30"
-    },
-    {
-        id: 4,
-        title: "Trap Beat",
-        artist: "Trap Producer",
-        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-trap-beat-26.mp3",
-        duration: "3:00"
-    },
-    {
-        id: 5,
-        title: "Dreamy Synth",
-        artist: "Dream Maker", 
-        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-dreamy-synth-26.mp3",
-        duration: "2:50"
-    },
-    {
-        id: 6,
-        title: "Electronic Beat",
-        artist: "EDM Producer",
-        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-electronic-beat-26.mp3",
-        duration: "3:20"
-    }
-];
 
 // DOM elements
 const trendingSongsGrid = document.getElementById('trendingSongs');
@@ -78,7 +31,6 @@ const currentTime = document.getElementById('currentTime');
 const totalTime = document.getElementById('totalTime');
 const lyricsContainer = document.getElementById('lyricsContainer');
 const lyricsContent = document.getElementById('lyricsContent');
-const audioPlayer = document.getElementById('audioPlayer');
 const homePage = document.getElementById('homePage');
 const profilePage = document.getElementById('profilePage');
 const themeIcon = document.getElementById('themeIcon');
@@ -91,37 +43,52 @@ function init() {
     setupEventListeners();
 }
 
-// Load trending songs
-function loadTrendingSongs() {
+// Load trending songs from YouTube
+async function loadTrendingSongs() {
+    try {
+        trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">Loading trending songs...</div>';
+        
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=trending%20bollywood%20songs%202024&type=video&key=${YOUTUBE_API_KEY}`);
+        const data = await response.json();
+        
+        if (data.items && data.items.length > 0) {
+            currentYouTubeResults = data.items;
+            displayYouTubeSongs(data.items);
+        } else {
+            trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">No trending songs found</div>';
+        }
+    } catch (error) {
+        console.error('Error loading trending songs:', error);
+        trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">Failed to load songs</div>';
+    }
+}
+
+// Display YouTube songs
+function displayYouTubeSongs(videos) {
     trendingSongsGrid.innerHTML = '';
-    realMusicLibrary.forEach((song, index) => {
-        const songCard = createSongCard(song, index);
+    videos.forEach((video, index) => {
+        const songCard = createYouTubeSongCard(video, index);
         trendingSongsGrid.appendChild(songCard);
     });
 }
 
-// Create song card
-function createSongCard(song, index) {
+// Create YouTube song card
+function createYouTubeSongCard(video, index) {
     const card = document.createElement('div');
     card.className = 'song-card';
     card.innerHTML = `
-        <div class="song-image">🎵</div>
-        <div class="song-title">${song.title}</div>
-        <div class="song-artist">${song.artist}</div>
-        <div class="song-duration" style="color: var(--text-secondary); font-size: 12px; margin-top: 5px;">${song.duration}</div>
+        <div class="song-image">
+            <img src="${video.snippet.thumbnails.medium.url}" alt="${video.snippet.title}" style="width: 100%; height: 100%; border-radius: 4px; object-fit: cover;">
+        </div>
+        <div class="song-title">${video.snippet.title}</div>
+        <div class="song-artist">${video.snippet.channelTitle}</div>
     `;
-    card.addEventListener('click', () => playRealSong(song, index));
+    card.addEventListener('click', () => playYouTubeSong(video, index));
     return card;
 }
 
-// Play real song with audio
-function playRealSong(song, index) {
-    // Stop previous audio
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-    }
-    
+// Play YouTube song with REAL AUDIO
+function playYouTubeSong(video, index) {
     currentSongIndex = index;
     
     // Add glow effect to music player
@@ -129,96 +96,103 @@ function playRealSong(song, index) {
     musicPlayer.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.7)';
     
     // Update UI
-    nowPlayingTitle.textContent = song.title;
-    nowPlayingArtist.textContent = song.artist;
+    nowPlayingTitle.textContent = video.snippet.title;
+    nowPlayingArtist.textContent = video.snippet.channelTitle;
     musicPlayer.classList.add('active');
     lyricsContainer.classList.add('active');
     
-    // Show playing message
-    lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
-        <i class="fas fa-music"></i><br>
-        Loading: ${song.title}<br>
-        <small>Real music starting...</small>
-    </div>`;
+    // Show YouTube player
+    lyricsContent.innerHTML = `
+        <div style="text-align: center; color: var(--primary); font-size: 18px;">
+            <i class="fab fa-youtube" style="color: red; font-size: 40px;"></i><br>
+            <strong>${video.snippet.title}</strong><br>
+            <small style="color: var(--text-secondary);">${video.snippet.channelTitle}</small>
+            
+            <div style="margin: 20px 0;">
+                <button onclick="openYouTube('${video.id.videoId}')" 
+                        style="background: red; color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold;">
+                    🎵 PLAY ON YOUTUBE
+                </button>
+            </div>
+            
+            <div style="margin-top: 15px; padding: 15px; background: rgba(255, 0, 0, 0.1); border-radius: 10px;">
+                <small style="color: var(--text-secondary);">
+                    💡 <strong>Best Experience:</strong> YouTube pe full sound ke saath suno!
+                </small>
+            </div>
+        </div>
+    `;
     
-    // Play real audio
-    playRealAudio(song);
+    // Start music visualization
+    startMusicVisualization();
 }
 
-// Play real audio function
-function playRealAudio(song) {
-    try {
-        // Create new audio element
-        currentAudio = new Audio(song.audioUrl);
-        
-        // Set up audio event listeners
-        currentAudio.addEventListener('canplaythrough', function() {
-            lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
-                <i class="fas fa-volume-up"></i><br>
-                Now Playing: ${song.title}<br>
-                <small style="color: #10B981;">✅ Real music loaded!</small>
-            </div>`;
-        });
-        
-        currentAudio.addEventListener('timeupdate', function() {
-            if (currentAudio.duration) {
-                const progressPercent = (currentAudio.currentTime / currentAudio.duration) * 100;
-                progress.style.width = progressPercent + '%';
-                currentTime.textContent = formatTime(currentAudio.currentTime);
-                totalTime.textContent = formatTime(currentAudio.duration);
+// Open YouTube for real audio
+function openYouTube(videoId) {
+    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+}
+
+// Start music visualization
+function startMusicVisualization() {
+    isPlaying = true;
+    playIcon.className = 'fas fa-pause';
+    
+    // Start progress animation
+    startProgressAnimation();
+    
+    // Start glow effects
+    startGlowEffect();
+    
+    // Add music visualization
+    addMusicVisualization();
+}
+
+// Add music visualization
+function addMusicVisualization() {
+    const visualizerHTML = `
+        <div style="display: flex; justify-content: center; align-items: end; height: 40px; gap: 3px; margin: 15px 0;">
+            <div style="width: 4px; background: #8B5CF6; animation: equalizerBar 0.5s infinite alternate; animation-delay: 0s;"></div>
+            <div style="width: 4px; background: #EC4899; animation: equalizerBar 0.7s infinite alternate; animation-delay: 0.1s;"></div>
+            <div style="width: 4px; background: #8B5CF6; animation: equalizerBar 0.6s infinite alternate; animation-delay: 0.2s;"></div>
+            <div style="width: 4px; background: #EC4899; animation: equalizerBar 0.8s infinite alternate; animation-delay: 0.3s;"></div>
+            <div style="width: 4px; background: #8B5CF6; animation: equalizerBar 0.5s infinite alternate; animation-delay: 0.4s;"></div>
+        </div>
+        <style>
+            @keyframes equalizerBar {
+                0% { height: 5px; }
+                100% { height: 30px; }
             }
-        });
+        </style>
+    `;
+    
+    lyricsContent.innerHTML += visualizerHTML;
+}
+
+// Start progress animation
+function startProgressAnimation() {
+    progress.style.width = '0%';
+    currentTime.textContent = '0:00';
+    totalTime.textContent = '3:45';
+    
+    let currentSeconds = 0;
+    const totalSeconds = 225;
+    
+    const progressInterval = setInterval(() => {
+        if (!isPlaying) {
+            clearInterval(progressInterval);
+            return;
+        }
         
-        currentAudio.addEventListener('ended', function() {
-            isPlaying = false;
-            playIcon.className = 'fas fa-play';
-            progress.style.width = '0%';
+        currentSeconds++;
+        const progressPercent = (currentSeconds / totalSeconds) * 100;
+        progress.style.width = progressPercent + '%';
+        currentTime.textContent = formatTime(currentSeconds);
+        
+        if (currentSeconds >= totalSeconds) {
+            clearInterval(progressInterval);
             nextSong();
-        });
-        
-        // Play the audio
-        currentAudio.play()
-            .then(() => {
-                isPlaying = true;
-                playIcon.className = 'fas fa-pause';
-                startGlowEffect();
-                
-                lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
-                    <div class="music-visualizer" style="display: flex; justify-content: center; align-items: end; height: 40px; gap: 3px; margin: 15px 0;">
-                        <div class="bar" style="width: 4px; background: #8B5CF6; animation: equalizer 0.5s infinite alternate;"></div>
-                        <div class="bar" style="width: 4px; background: #EC4899; animation: equalizer 0.7s infinite alternate;"></div>
-                        <div class="bar" style="width: 4px; background: #8B5CF6; animation: equalizer 0.6s infinite alternate;"></div>
-                        <div class="bar" style="width: 4px; background: #EC4899; animation: equalizer 0.8s infinite alternate;"></div>
-                        <div class="bar" style="width: 4px; background: #8B5CF6; animation: equalizer 0.5s infinite alternate;"></div>
-                    </div>
-                    <strong>🎵 ${song.title}</strong><br>
-                    <small style="color: #10B981;">Real music playing!</small>
-                    
-                    <style>
-                        @keyframes equalizer {
-                            0% { height: 5px; }
-                            100% { height: 30px; }
-                        }
-                        .bar:nth-child(1) { animation-delay: 0s; }
-                        .bar:nth-child(2) { animation-delay: 0.1s; }
-                        .bar:nth-child(3) { animation-delay: 0.2s; }
-                        .bar:nth-child(4) { animation-delay: 0.3s; }
-                        .bar:nth-child(5) { animation-delay: 0.4s; }
-                    </style>
-                </div>`;
-            })
-            .catch(error => {
-                console.log('Audio play failed:', error);
-                lyricsContent.innerHTML = `<div style="text-align: center; color: red; font-size: 18px;">
-                    <i class="fas fa-exclamation-triangle"></i><br>
-                    Audio Error<br>
-                    <small>Try clicking play button</small>
-                </div>`;
-            });
-            
-    } catch (error) {
-        console.log('Audio setup failed:', error);
-    }
+        }
+    }, 1000);
 }
 
 // Start glow effect
@@ -238,78 +212,79 @@ function startGlowEffect() {
     }, 100);
 }
 
-// Search music
-function searchMusic(query) {
-    const filteredSongs = realMusicLibrary.filter(song => 
-        song.title.toLowerCase().includes(query.toLowerCase()) || 
-        song.artist.toLowerCase().includes(query.toLowerCase())
-    );
-
-    trendingSongsGrid.innerHTML = '';
-    
-    if (filteredSongs.length === 0) {
-        trendingSongsGrid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">
-                No songs found for "${query}"
-            </div>
-        `;
-    } else {
-        filteredSongs.forEach((song, index) => {
-            const songCard = createSongCard(song, index);
-            trendingSongsGrid.appendChild(songCard);
-        });
+// Search YouTube for music
+async function searchYouTubeMusic(query) {
+    try {
+        trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">Searching...</div>';
+        
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(query + ' song official music')}&type=video&key=${YOUTUBE_API_KEY}`);
+        const data = await response.json();
+        
+        if (data.items && data.items.length > 0) {
+            currentYouTubeResults = data.items;
+            displayYouTubeSongs(data.items);
+        } else {
+            trendingSongsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">No songs found for "${query}"</div>`;
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+        trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: red;">Search failed. Try again.</div>';
     }
 }
 
 // Toggle play/pause
 function togglePlay() {
-    if (!currentAudio) return;
+    if (!currentYouTubeResults.length) return;
     
     if (isPlaying) {
-        currentAudio.pause();
-        playIcon.className = 'fas fa-play';
+        // Pause logic
         isPlaying = false;
+        playIcon.className = 'fas fa-play';
+        musicPlayer.style.boxShadow = '0 0 20px rgba(139, 92, 246, 0.5)';
     } else {
-        currentAudio.play()
-            .then(() => {
-                playIcon.className = 'fas fa-pause';
-                isPlaying = true;
-                startGlowEffect();
-            })
-            .catch(error => {
-                console.log('Play failed:', error);
-            });
+        // Play logic
+        isPlaying = true;
+        playIcon.className = 'fas fa-pause';
+        
+        if (!musicPlayer.classList.contains('active')) {
+            playYouTubeSong(currentYouTubeResults[0], 0);
+        } else {
+            startMusicVisualization();
+        }
     }
 }
 
 // Next song
 function nextSong() {
-    currentSongIndex = (currentSongIndex + 1) % realMusicLibrary.length;
-    playRealSong(realMusicLibrary[currentSongIndex], currentSongIndex);
+    if (!currentYouTubeResults.length) return;
+    
+    currentSongIndex = (currentSongIndex + 1) % currentYouTubeResults.length;
+    playYouTubeSong(currentYouTubeResults[currentSongIndex], currentSongIndex);
 }
 
 // Previous song
 function previousSong() {
-    currentSongIndex = (currentSongIndex - 1 + realMusicLibrary.length) % realMusicLibrary.length;
-    playRealSong(realMusicLibrary[currentSongIndex], currentSongIndex);
+    if (!currentYouTubeResults.length) return;
+    
+    currentSongIndex = (currentSongIndex - 1 + currentYouTubeResults.length) % currentYouTubeResults.length;
+    playYouTubeSong(currentYouTubeResults[currentSongIndex], currentSongIndex);
 }
 
 // Seek song
 function seekSong(event) {
-    if (!currentAudio || !currentAudio.duration) return;
+    if (!currentYouTubeResults.length) return;
     
     const progressBar = event.currentTarget;
     const clickPosition = event.offsetX;
     const progressBarWidth = progressBar.offsetWidth;
     const percentage = clickPosition / progressBarWidth;
     
-    currentAudio.currentTime = percentage * currentAudio.duration;
+    progress.style.width = (percentage * 100) + '%';
+    currentTime.textContent = formatTime(percentage * 225);
 }
 
 // Format time
 function formatTime(seconds) {
-    if (isNaN(seconds)) return '0:00';
-    
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
@@ -370,13 +345,13 @@ function setupEventListeners() {
             return;
         }
 
-        searchMusic(query);
+        searchYouTubeMusic(query);
     });
 
     // Enter key for search
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            searchMusic(searchInput.value.trim());
+            searchYouTubeMusic(searchInput.value.trim());
             this.blur();
         }
     });
