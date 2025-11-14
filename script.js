@@ -1,194 +1,26 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APNA MUSIC - Premium Streaming</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Sparkle Background -->
-    <div class="sparkle-bg" id="sparkleBg"></div>
+// BACKEND URL - YAHAN APNA BACKEND URL DALDO
+const BACKEND_URL = "https://apna-music-backend.onrender.com";
 
-    <!-- Login Modal -->
-    <div class="login-modal" id="loginModal">
-        <div class="login-content">
-            <div class="login-header">
-                <h2>Welcome to APNA MUSIC</h2>
-                <button class="close-btn" onclick="closeLogin()">&times;</button>
-            </div>
-            <form class="login-form" onsubmit="handleLogin(event)">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" placeholder="Email address" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" required>
-                </div>
-                <button type="submit" class="login-submit-btn">Log In</button>
-            </form>
-            <div class="login-footer">
-                <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
-            </div>
-        </div>
-    </div>
+// UPDATED SEARCH FUNCTION
+async function searchYouTube(query) {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Search error:', error);
+        throw error;
+    }
+}
 
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <div class="logo-icon">A</div>
-                <div class="logo-text">APNA MUSIC</div>
-            </div>
-
-            <a href="#" class="nav-item active" onclick="showPage('home')">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showPage('search')">
-                <i class="fas fa-search"></i>
-                <span>Search</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showPage('library')">
-                <i class="fas fa-book"></i>
-                <span>Your Library</span>
-            </a>
-            
-            <div class="premium-section">
-                <h4>Premium Features</h4>
-                <p>Listen without limits. Try Premium for better experience.</p>
-                <button class="premium-btn" onclick="showPremium()">
-                    Try Premium
-                </button>
-            </div>
-
-            <a href="#" class="nav-item" onclick="showPage('profile')">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </a>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div class="search-container">
-                    <div class="glowing-input">
-                        <input type="text" id="searchInput" placeholder="What do you want to listen to?">
-                    </div>
-                </div>
-
-                <div class="user-controls">
-                    <button class="theme-toggle" onclick="toggleTheme()">
-                        <i class="fas fa-moon" id="themeIcon"></i>
-                    </button>
-                    <button class="login-btn" onclick="showLogin()" id="loginBtn">
-                        Login
-                    </button>
-                </div>
-            </div>
-
-            <!-- Home Page -->
-            <div class="content-area active" id="homePage">
-                <h2 class="section-title">Trending Now 🔥</h2>
-                
-                <div class="songs-grid" id="trendingSongs">
-                    <!-- Songs will be loaded here -->
-                </div>
-
-                <div class="lyrics-container" id="lyricsContainer">
-                    <h3 class="lyrics-title">Now Playing</h3>
-                    <div id="lyricsContent"></div>
-                </div>
-            </div>
-
-            <!-- Search Page -->
-            <div class="content-area" id="searchPage">
-                <h2 class="section-title">Search Songs</h2>
-                <div class="search-results" id="searchResults">
-                    <!-- Search results will appear here -->
-                </div>
-            </div>
-
-            <!-- Library Page -->
-            <div class="content-area" id="libraryPage">
-                <h2 class="section-title">Your Library</h2>
-                <div class="library-content" id="libraryContent">
-                    <p>Your favorite songs will appear here</p>
-                </div>
-            </div>
-
-            <!-- Profile Page -->
-            <div class="profile-page" id="profilePage">
-                <div class="profile-header">
-                    <div class="profile-pic">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h1 class="profile-name">Aditya Editz</h1>
-                    <p class="profile-bio">Music Creator & Editor</p>
-                </div>
-
-                <div class="social-links">
-                    <a href="https://www.facebook.com/share/1Bd1E1Efbs/" class="social-icon facebook" target="_blank">
-                        <i class="fab fa-facebook-f"></i>
-                        <div class="tooltip">Facebook</div>
-                    </a>
-                    <a href="https://youtube.com/@adityaeditz-h5m?si=Fbw9BXqMdFe96vsi" class="social-icon youtube" target="_blank">
-                        <i class="fab fa-youtube"></i>
-                        <div class="tooltip">YouTube</div>
-                    </a>
-                    <a href="#" class="social-icon tiktok">
-                        <i class="fab fa-tiktok"></i>
-                        <div class="tooltip">TikTok</div>
-                    </a>
-                    <a href="#" class="social-icon alight-motion">
-                        <i class="fas fa-motion"></i>
-                        <div class="tooltip">Alight Motion</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Music Player -->
-    <div class="music-player" id="musicPlayer">
-        <div class="player-controls">
-            <div class="song-info">
-                <div class="current-song-image">🎵</div>
-                <div class="song-details">
-                    <div class="current-song-title" id="nowPlayingTitle">Select a song</div>
-                    <div class="current-song-artist" id="nowPlayingArtist">Artist</div>
-                </div>
-            </div>
-
-            <div class="control-buttons">
-                <button class="control-btn" onclick="previousSong()">
-                    <i class="fas fa-step-backward"></i>
-                </button>
-                <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
-                    <i class="fas fa-play" id="playIcon"></i>
-                </button>
-                <button class="control-btn" onclick="nextSong()">
-                    <i class="fas fa-step-forward"></i>
-                </button>
-            </div>
-
-            <div class="progress-section">
-                <span class="time" id="currentTime">0:00</span>
-                <div class="progress-bar" onclick="seekSong(event)">
-                    <div class="progress" id="progress"></div>
-                </div>
-                <span class="time" id="totalTime">0:00</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- YouTube IFrame Player -->
-    <div id="audioPlayer"></div>
-    <script src="https://www.youtube.com/iframe_api"></script>
-
-    <script src="script.js"></script>
-</body>
-</html>
+// UPDATED TRENDING FUNCTION
+async function loadTrendingSongs() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/trending`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Trending songs error:', error);
+        throw error;
+    }
+}
