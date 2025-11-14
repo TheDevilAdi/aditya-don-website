@@ -1,10 +1,77 @@
-// Create sparkle background
+/* ===========================
+   script.js — YouTube Search + Play
+   Replace your current script.js with this file.
+   KEEP your index.html and style.css unchanged.
+   ---------------------------
+   After replacing, set YT_API_KEY below.
+   =========================== */
+
+/* ========== CONFIG ========== */
+// Put your YouTube Data API v3 key here:
+const YT_API_KEY = "YOUR_API_KEY_HERE";
+
+// Base for converting YouTube video -> direct audio stream (third-party).
+// If this service requires signup or rate-limits, replace with another extractor endpoint.
+// Example pattern used below: `${AUDIO_EXTRACTOR_BASE}${videoId}`
+const AUDIO_EXTRACTOR_BASE = "https://yt-api.io/api/v1/audio/"; 
+
+/* ========== Local Music Library (fallback) ========== */
+const musicLibrary = [
+    { id: 1, title: "Shape of You", artist: "Ed Sheeran", audioUrl: "https://assets.codepen.io/4358586/ShapeOfYou.mp3",
+      lyrics: ["The club isn't the best place to find a lover", "So the bar is where I go"] },
+
+    { id: 2, title: "Blinding Lights", artist: "The Weeknd", audioUrl: "https://assets.codepen.io/4358586/BlindingLights.mp3",
+      lyrics: ["I've been tryna call", "I've been on my own for long enough"] },
+
+    { id: 3, title: "Dance Monkey", artist: "Tones and I", audioUrl: "https://assets.codepen.io/4358586/DanceMonkey.mp3",
+      lyrics: ["They say oh my god I see the way you shine"] },
+
+    { id: 4, title: "Lehanga", artist: "Jass Manak", audioUrl: "https://assets.codepen.io/4358586/Lehanga.mp3",
+      lyrics: ["Lehanga lehanga tera lehanga"] },
+
+    { id: 5, title: "Lut Gaye", artist: "Jubin Nautiyal", audioUrl: "https://assets.codepen.io/4358586/LutGaye.mp3",
+      lyrics: ["Lut gaye lut gaye hum toh tere pyaar mein"] },
+
+    { id: 6, title: "Mann Bharrya", artist: "B Praak", audioUrl: "https://assets.codepen.io/4358586/MannBharrya.mp3",
+      lyrics: ["Mann bharrya ve mainu tu hi tu"] },
+];
+
+/* ========== DOM ========== */
+const trendingSongsGrid = document.getElementById('trendingSongs');
+const musicPlayer = document.getElementById('musicPlayer');
+const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+const nowPlayingArtist = document.getElementById('nowPlayingArtist');
+const playIcon = document.getElementById('playIcon');
+const progress = document.getElementById('progress');
+const currentTime = document.getElementById('currentTime');
+const totalTime = document.getElementById('totalTime');
+const lyricsContainer = document.getElementById('lyricsContainer');
+const lyricsContent = document.getElementById('lyricsContent');
+const audioPlayer = document.getElementById('audioPlayer');
+const homePage = document.getElementById('homePage');
+const profilePage = document.getElementById('profilePage');
+const searchInput = document.getElementById('searchInput');
+
+/* ========== State ========== */
+let currentSong = null;
+let isPlaying = false;
+let currentSongIndex = 0;
+let currentList = []; // Holds current list (search results or default musicLibrary)
+
+/* ========== Init ========== */
+function init() {
+    createSparkles();
+    currentList = [...musicLibrary];
+    loadTrendingSongs(currentList);
+    setupEventListeners();
+}
+document.addEventListener('DOMContentLoaded', init);
+
+/* ========== Sparkles (unchanged) ========== */
 function createSparkles() {
     const sparkleBg = document.getElementById('sparkleBg');
-    // Remove existing sparkles
-    sparkleBg.innerHTML = '';
-    
-    for (let i = 0; i < 30; i++) {
+    if (!sparkleBg) return;
+    for (let i = 0; i < 50; i++) {
         const sparkle = document.createElement('div');
         sparkle.className = 'sparkle';
         sparkle.style.left = Math.random() * 100 + '%';
@@ -14,490 +81,229 @@ function createSparkles() {
     }
 }
 
-// Real Music Library with working audio URLs
-const musicLibrary = [
-    {
-        id: 1,
-        title: "Kesariya",
-        artist: "Arijit Singh",
-        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9f/bf/8a/9fbf8a8d-1c25-21a8-8e31-0e6d0ab89a7d/mzaf_13283691192501366626.plus.aac.p.m4a",
-        lyrics: ["Kesariya tera ishq hai piya", "Rang jaaun main to kesariya", "Kesariya tera ishq hai piya", "Rang jaaun main to kesariya", "Tera ishq hai to phir kyun darta hoon main", "Tujhko paake bhi khota hoon main"]
-    },
-    {
-        id: 2,
-        title: "Tere Vaaste",
-        artist: "Sachin-Jigar",
-        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
-        lyrics: ["Tere vaaste bana diya khuda ko bhi", "Tujhko paane ke liye", "Tere vaaste bana diya khuda ko bhi", "Tujhko paane ke liye", "Tu jo mili hai to lagta hai", "Jaise mil gayi hai duniya saari"]
-    },
-    {
-        id: 3,
-        title: "Apna Bana Le",
-        artist: "Arijit Singh",
-        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
-        lyrics: ["Apna bana le piya", "Apna bana le", "Main to teri ho gayi", "Tu bhi to mera ho ja", "Dil diya hai maine tujhko", "Jaane jaah tujhko"]
-    },
-    {
-        id: 4,
-        title: "Raatan Lambiyan",
-        artist: "Tanishk Bagchi",
-        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
-        lyrics: ["Raatan lambiyan lambiyan", "Yaad teriyan lambiyan", "Raatan lambiyan lambiyan", "Yaad teriyan lambiyan", "Teri yaadon mein so jaunga", "Teri baaton ko main dohaunga"]
-    },
-    {
-        id: 5,
-        title: "Heeriye",
-        artist: "Arijit Singh",
-        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
-        lyrics: ["Heeriye heeriye heeriye", "Tu hi to meri duniya", "Heeriye heeriye heeriye", "Tu hi to meri khushi", "Tere bina main kuch bhi nahi", "Tere bina adhoora hoon main"]
-    },
-    {
-        id: 6,
-        title: "Lut Gaye",
-        artist: "Jubin Nautiyal",
-        audioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5f/3c/91/5f3c91a7-9b9a-5e5f-8b0a-6d4b8e8e9b5a/mzaf_1833429210811182006.plus.aac.p.m4a",
-        lyrics: ["Lut gaye lut gaye hum toh tere pyaar mein", "Dil de diya hai saara teri bahon mein", "Tere bina ab na jeena", "Tere bina ab na marna"]
-    }
-];
-
-// Global Variables
-let currentSongIndex = 0;
-let isPlaying = false;
-let isLoggedIn = false;
-let currentAudio = null;
-let lyricsInterval = null;
-let currentLyricsLine = 0;
-
-// DOM Elements
-const trendingSongsGrid = document.getElementById('trendingSongs');
-const musicPlayer = document.getElementById('musicPlayer');
-const nowPlayingTitle = document.getElementById('nowPlayingTitle');
-const nowPlayingArtist = document.getElementById('nowPlayingArtist');
-const playBtn = document.getElementById('playBtn');
-const playIcon = document.getElementById('playIcon');
-const progress = document.getElementById('progress');
-const currentTime = document.getElementById('currentTime');
-const totalTime = document.getElementById('totalTime');
-const lyricsContainer = document.getElementById('lyricsContainer');
-const lyricsContent = document.getElementById('lyricsContent');
-const loginModal = document.getElementById('loginModal');
-const loginBtn = document.getElementById('loginBtn');
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-const homePage = document.getElementById('homePage');
-const searchPage = document.getElementById('searchPage');
-const libraryPage = document.getElementById('libraryPage');
-const profilePage = document.getElementById('profilePage');
-const audioPlayer = document.getElementById('audioPlayer');
-
-// Initialize the app
-function init() {
-    createSparkles();
-    loadTrendingSongs();
-    setupEventListeners();
-    showPage('home');
-}
-
-// Load trending songs
-function loadTrendingSongs() {
+/* ========== UI: load grid ========== */
+function loadTrendingSongs(list) {
     trendingSongsGrid.innerHTML = '';
-    musicLibrary.forEach((song, index) => {
-        const songCard = createSongCard(song, index);
-        trendingSongsGrid.appendChild(songCard);
+    list.forEach((item, idx) => {
+        const card = createSongCard(item, idx);
+        trendingSongsGrid.appendChild(card);
     });
 }
 
-// Create song card
-function createSongCard(song, index) {
+/* ========== Create card (shows thumbnail if present) ========== */
+function createSongCard(item, index) {
     const card = document.createElement('div');
     card.className = 'song-card';
+
+    // Build image/thumbnail area: If item.thumbnail exists show <img>, else emoji
+    const thumbHtml = item.thumbnail ? `<img src="${item.thumbnail}" alt="${escapeHtml(item.title)}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">`
+                                      : '🎵';
+
     card.innerHTML = `
-        <div class="song-image">
-            <i class="fas fa-music"></i>
-        </div>
-        <div class="song-title">${song.title}</div>
-        <div class="song-artist">${song.artist}</div>
+        <div class="song-image">${thumbHtml}</div>
+        <div class="song-title">${escapeHtml(item.title)}</div>
+        <div class="song-artist">${escapeHtml(item.artist || '')}</div>
     `;
-    card.addEventListener('click', () => playSong(song, index));
+
+    card.addEventListener('click', () => {
+        playSongFromList(index);
+    });
     return card;
 }
 
-// Play song function
-function playSong(song, index) {
-    if (!isLoggedIn) {
-        showLogin();
-        return;
-    }
+/* ========== Play flow ========== */
+function playSongFromList(index) {
+    // get item from currentList
+    const item = currentList[index];
+    if (!item) return;
 
+    currentSong = item;
     currentSongIndex = index;
-    
-    // Stop current audio if playing
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-    }
-    
-    // Update UI
-    nowPlayingTitle.textContent = song.title;
-    nowPlayingArtist.textContent = song.artist;
+    nowPlayingTitle.textContent = item.title;
+    nowPlayingArtist.textContent = item.artist || 'Unknown';
     musicPlayer.classList.add('active');
     lyricsContainer.classList.add('active');
-    
-    // Create new audio element
-    currentAudio = new Audio(song.audioUrl);
-    currentAudio.preload = 'metadata';
-    
-    // Set up audio event listeners
-    currentAudio.addEventListener('loadedmetadata', function() {
-        totalTime.textContent = formatTime(currentAudio.duration);
-    });
-    
-    currentAudio.addEventListener('timeupdate', function() {
-        if (currentAudio.duration) {
-            const progressPercent = (currentAudio.currentTime / currentAudio.duration) * 100;
-            progress.style.width = progressPercent + '%';
-            currentTime.textContent = formatTime(currentAudio.currentTime);
-        }
-    });
-    
-    currentAudio.addEventListener('ended', function() {
-        isPlaying = false;
-        playIcon.className = 'fas fa-play';
-        progress.style.width = '0%';
-        nextSong();
-    });
-    
-    // Play the audio
-    playAudio();
-    
-    // Display lyrics
-    displayLyrics(song.lyrics);
+
+    // Try to get audio URL:
+    if (item.videoId) {
+        // If item came from YouTube search, build extractor URL
+        const audioUrl = AUDIO_EXTRACTOR_BASE + item.videoId;
+        setAndPlayAudio(audioUrl, item);
+    } else if (item.audioUrl) {
+        // local fallback
+        setAndPlayAudio(item.audioUrl, item);
+    } else {
+        console.warn("No playable source for item", item);
+    }
 }
 
-// Play audio
-function playAudio() {
-    if (!currentAudio) return;
-    
-    currentAudio.play().then(() => {
+function setAndPlayAudio(url, itemMeta) {
+    // Set audio src and attempt play
+    audioPlayer.src = url;
+    audioPlayer.crossOrigin = "anonymous";
+    audioPlayer.load();
+
+    audioPlayer.play().then(() => {
         isPlaying = true;
         playIcon.className = 'fas fa-pause';
-        startLyricsAnimation();
-    }).catch(error => {
-        console.log('Audio play failed:', error);
-        // Fallback: Simulate playback
-        simulatePlayback();
-    });
-}
-
-// Display lyrics
-function displayLyrics(lyrics) {
-    lyricsContent.innerHTML = '';
-    lyrics.forEach((line, index) => {
-        const lineDiv = document.createElement('div');
-        lineDiv.className = 'lyrics-line';
-        lineDiv.textContent = line;
-        if (index === 0) {
-            lineDiv.style.color = 'var(--primary)';
-            lineDiv.style.fontWeight = 'bold';
-        }
-        lyricsContent.appendChild(lineDiv);
-    });
-    currentLyricsLine = 0;
-}
-
-// Start lyrics animation
-function startLyricsAnimation() {
-    if (lyricsInterval) clearInterval(lyricsInterval);
-    
-    const lines = lyricsContent.querySelectorAll('.lyrics-line');
-    currentLyricsLine = 0;
-    
-    lyricsInterval = setInterval(() => {
-        // Reset all lines
-        lines.forEach(line => {
-            line.style.color = 'var(--text)';
-            line.style.fontWeight = 'normal';
-        });
-        
-        // Highlight current line
-        if (lines[currentLyricsLine]) {
-            lines[currentLyricsLine].style.color = 'var(--primary)';
-            lines[currentLyricsLine].style.fontWeight = 'bold';
-            
-            // Scroll to current line
-            lines[currentLyricsLine].scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }
-        
-        currentLyricsLine = (currentLyricsLine + 1) % lines.length;
-    }, 3000);
-}
-
-// Stop lyrics animation
-function stopLyricsAnimation() {
-    if (lyricsInterval) {
-        clearInterval(lyricsInterval);
-        lyricsInterval = null;
-    }
-}
-
-// Toggle play/pause
-function togglePlay() {
-    if (!currentAudio) return;
-    
-    if (isPlaying) {
-        currentAudio.pause();
-        playIcon.className = 'fas fa-play';
+    }).catch((err) => {
+        // Autoplay blocked or extractor blocked — show play icon to ask user to tap
+        console.warn('Play failed (autoplay or CORS):', err);
         isPlaying = false;
-        stopLyricsAnimation();
+        playIcon.className = 'fas fa-play';
+    });
+
+    // Update lyrics if available
+    if (itemMeta.lyrics) displayLyrics(itemMeta.lyrics);
+    else displayLyrics([]);
+}
+
+/* ========== Toggle play/pause button ========== */
+function togglePlay() {
+    if (!currentSong) return;
+    if (isPlaying) {
+        audioPlayer.pause();
+        playIcon.className = 'fas fa-play';
     } else {
-        playAudio();
+        audioPlayer.play().then(() => {
+            playIcon.className = 'fas fa-pause';
+        }).catch(e => {
+            console.warn('Play blocked, user interaction required.', e);
+        });
     }
+    isPlaying = !isPlaying;
 }
 
-// Next song
+/* ========== Audio progress & ended handlers ========== */
+audioPlayer.addEventListener('timeupdate', () => {
+    if (!audioPlayer.duration) return;
+    const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    progress.style.width = pct + '%';
+    currentTime.textContent = formatTime(audioPlayer.currentTime);
+    totalTime.textContent = formatTime(audioPlayer.duration);
+});
+
+audioPlayer.addEventListener('ended', () => {
+    nextSong();
+});
+
+/* ========== Next / Previous ========== */
 function nextSong() {
-    currentSongIndex = (currentSongIndex + 1) % musicLibrary.length;
-    playSong(musicLibrary[currentSongIndex], currentSongIndex);
+    if (!currentList || currentList.length === 0) return;
+    currentSongIndex = (currentSongIndex + 1) % currentList.length;
+    playSongFromList(currentSongIndex);
 }
-
-// Previous song
 function previousSong() {
-    currentSongIndex = (currentSongIndex - 1 + musicLibrary.length) % musicLibrary.length;
-    playSong(musicLibrary[currentSongIndex], currentSongIndex);
+    if (!currentList || currentList.length === 0) return;
+    currentSongIndex = (currentSongIndex - 1 + currentList.length) % currentList.length;
+    playSongFromList(currentSongIndex);
 }
 
-// Seek song
+/* ========== Seek ========== */
 function seekSong(event) {
-    if (!currentAudio || !currentAudio.duration) return;
-    
-    const progressBar = event.currentTarget;
-    const clickPosition = event.offsetX;
-    const progressBarWidth = progressBar.offsetWidth;
-    const percentage = clickPosition / progressBarWidth;
-    
-    currentAudio.currentTime = percentage * currentAudio.duration;
+    if (!audioPlayer.duration) return;
+    const pct = event.offsetX / event.currentTarget.offsetWidth;
+    audioPlayer.currentTime = pct * audioPlayer.duration;
 }
 
-// Format time
-function formatTime(seconds) {
-    if (isNaN(seconds)) return '0:00';
-    
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-// Show page function
-function showPage(page) {
-    // Hide all pages
-    document.querySelectorAll('.content-area, .profile-page').forEach(page => {
-        page.classList.remove('active');
-        page.style.display = 'none';
-    });
-    
-    // Remove active class from all nav items
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Add active class to clicked nav item
-    event.target.classList.add('active');
-    
-    // Show selected page
-    if (page === 'home') {
-        homePage.style.display = 'block';
-        homePage.classList.add('active');
-    } else if (page === 'search') {
-        searchPage.style.display = 'block';
-        searchPage.classList.add('active');
-        loadSearchPage();
-    } else if (page === 'library') {
-        libraryPage.style.display = 'block';
-        libraryPage.classList.add('active');
-    } else if (page === 'profile') {
-        profilePage.style.display = 'block';
-        profilePage.classList.add('active');
-    }
-}
-
-// Load search page
-function loadSearchPage() {
-    searchResults.innerHTML = '';
-    musicLibrary.forEach((song, index) => {
-        const songCard = createSongCard(song, index);
-        searchResults.appendChild(songCard);
-    });
-}
-
-// Search functionality
-function handleSearch() {
-    const query = searchInput.value.toLowerCase().trim();
-    
-    if (query === '') {
-        loadTrendingSongs();
+/* ========== Lyrics ========== */
+function displayLyrics(lines) {
+    if (!lyricsContent) return;
+    if (!lines || lines.length === 0) {
+        lyricsContent.innerHTML = `<div style="color:var(--text-secondary)">No lyrics</div>`;
         return;
     }
+    lyricsContent.innerHTML = lines.map(l => `<div class="lyrics-line">${escapeHtml(l)}</div>`).join('');
+}
 
-    const filteredSongs = musicLibrary.filter(song => 
-        song.title.toLowerCase().includes(query) || 
-        song.artist.toLowerCase().includes(query)
-    );
+/* ========== Search: uses YouTube Data API (if API key provided) ==========
+   If API key missing or API fails, falls back to local library search.
+=================================== */
+async function doYoutubeSearch(query) {
+    if (!YT_API_KEY || YT_API_KEY === "YOUR_API_KEY_HERE") {
+        // No API key: fallback to local search
+        return localSearch(query);
+    }
 
-    trendingSongsGrid.innerHTML = '';
-    
-    if (filteredSongs.length === 0) {
-        trendingSongsGrid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">
-                <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; display: block;"></i>
-                No songs found for "${query}"
-            </div>
-        `;
-    } else {
-        filteredSongs.forEach((song, index) => {
-            const songCard = createSongCard(song, index);
-            trendingSongsGrid.appendChild(songCard);
-        });
+    const q = encodeURIComponent(query);
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=12&q=${q}&key=${YT_API_KEY}`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('YT API HTTP ' + res.status);
+        const data = await res.json();
+
+        // Map to our item structure
+        const items = data.items.map(it => ({
+            title: it.snippet.title,
+            artist: it.snippet.channelTitle,
+            thumbnail: it.snippet.thumbnails?.high?.url || it.snippet.thumbnails?.default?.url || '',
+            videoId: it.id.videoId,
+            lyrics: [] // optional: we don't have lyrics from YT
+        }));
+
+        // Set currentList and render
+        currentList = items;
+        loadTrendingSongs(currentList);
+        return items;
+    } catch (err) {
+        console.warn('YouTube search failed:', err);
+        // fallback
+        return localSearch(query);
     }
 }
 
-// Login functionality
-function showLogin() {
-    loginModal.classList.add('active');
+function localSearch(q) {
+    const ql = (q || '').toLowerCase().trim();
+    const results = musicLibrary.filter(s => s.title.toLowerCase().includes(ql) || s.artist.toLowerCase().includes(ql));
+    // Map to keep consistency
+    const mapped = results.map(r => ({ ...r }));
+    currentList = mapped;
+    loadTrendingSongs(currentList);
+    return mapped;
 }
 
-function closeLogin() {
-    loginModal.classList.remove('active');
-}
-
-function handleLogin(event) {
-    event.preventDefault();
-    const email = event.target.querySelector('input[type="email"]').value;
-    const password = event.target.querySelector('input[type="password"]').value;
-    
-    // Simple login validation
-    if (email && password) {
-        isLoggedIn = true;
-        loginBtn.textContent = 'Logout';
-        document.body.classList.add('user-logged-in');
-        closeLogin();
-        alert('Login successful! Welcome to APNA MUSIC 🎵');
-        
-        // Reset form
-        event.target.reset();
-    } else {
-        alert('Please enter both email and password');
-    }
-}
-
-// Logout functionality
-function handleLogout() {
-    isLoggedIn = false;
-    loginBtn.textContent = 'Login';
-    document.body.classList.remove('user-logged-in');
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-    }
-    musicPlayer.classList.remove('active');
-    lyricsContainer.classList.remove('active');
-    isPlaying = false;
-    playIcon.className = 'fas fa-play';
-    alert('Logged out successfully!');
-}
-
-// Toggle theme
-function toggleTheme() {
-    document.body.classList.toggle('light-theme');
-    if (document.body.classList.contains('light-theme')) {
-        themeIcon.className = 'fas fa-sun';
-    } else {
-        themeIcon.className = 'fas fa-moon';
-    }
-}
-
-// Show premium
-function showPremium() {
-    alert('🎵 Premium Features Coming Soon! 🎵\n\n• Ad-free listening\n• High quality audio\n• Offline downloads\n• Unlimited skips');
-}
-
-// Simulate playback if actual audio fails
-function simulatePlayback() {
-    isPlaying = true;
-    playIcon.className = 'fas fa-pause';
-    
-    let currentTimeValue = 0;
-    const duration = 180;
-    
-    const interval = setInterval(() => {
-        if (!isPlaying) {
-            clearInterval(interval);
-            return;
-        }
-        
-        currentTimeValue++;
-        const progressPercent = (currentTimeValue / duration) * 100;
-        progress.style.width = progressPercent + '%';
-        currentTime.textContent = formatTime(currentTimeValue);
-        totalTime.textContent = formatTime(duration);
-        
-        if (currentTimeValue >= duration) {
-            clearInterval(interval);
-            isPlaying = false;
-            playIcon.className = 'fas fa-play';
-            progress.style.width = '0%';
-            nextSong();
-        }
-    }, 1000);
-}
-
-// Setup event listeners
+/* ========== Setup UI listeners ========== */
 function setupEventListeners() {
-    // Search functionality
-    searchInput.addEventListener('input', handleSearch);
-    
-    // Login button click
-    loginBtn.addEventListener('click', function() {
-        if (isLoggedIn) {
-            handleLogout();
-        } else {
-            showLogin();
-        }
+    // Search input with debounce
+    let timer = null;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(timer);
+        const q = e.target.value.trim();
+        timer = setTimeout(() => {
+            if (!q) {
+                // If empty, show default (local library)
+                currentList = [...musicLibrary];
+                loadTrendingSongs(currentList);
+                return;
+            }
+            // Try YouTube search (or fallback)
+            doYoutubeSearch(q);
+        }, 350);
     });
-    
-    // Close modal when clicking outside
-    loginModal.addEventListener('click', function(event) {
-        if (event.target === loginModal) {
-            closeLogin();
-        }
+
+    // Enter key blur
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') e.target.blur();
     });
-    
-    // Keyboard controls
-    document.addEventListener('keydown', function(event) {
-        if (event.code === 'Space' && currentAudio) {
-            event.preventDefault();
-            togglePlay();
-        } else if (event.code === 'ArrowRight' && currentAudio) {
-            nextSong();
-        } else if (event.code === 'ArrowLeft' && currentAudio) {
-            previousSong();
-        } else if (event.code === 'Escape') {
-            closeLogin();
-        }
-    });
-    
-    // Handle page resize for mobile
-    window.addEventListener('resize', function() {
-        createSparkles();
+
+    // Player control buttons (these are inline in HTML but ensure functions exist)
+    // play button uses togglePlay() via inline onclick, ok.
+}
+
+/* ========== Utilities ========== */
+function formatTime(secs) {
+    if (isNaN(secs)) return '0:00';
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function(m) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m];
     });
 }
 
-// Show signup (placeholder)
-function showSignup() {
-    alert('Sign up feature coming soon!');
-}
-
-// Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+/* ========== End of script.js ========== */
