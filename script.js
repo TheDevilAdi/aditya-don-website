@@ -18,6 +18,7 @@ function createSparkles() {
 let currentSongIndex = 0;
 let currentYouTubeResults = [];
 let player = null;
+let userInteracted = false;
 
 // DOM elements
 const trendingSongsGrid = document.getElementById('trendingSongs');
@@ -26,12 +27,9 @@ const nowPlayingTitle = document.getElementById('nowPlayingTitle');
 const nowPlayingArtist = document.getElementById('nowPlayingArtist');
 const playBtn = document.getElementById('playBtn');
 const playIcon = document.getElementById('playIcon');
-const progress = document.getElementById('progress');
-const currentTime = document.getElementById('currentTime');
-const totalTime = document.getElementById('totalTime');
+const searchInput = document.getElementById('searchInput');
 const lyricsContainer = document.getElementById('lyricsContainer');
 const lyricsContent = document.getElementById('lyricsContent');
-const searchInput = document.getElementById('searchInput');
 const homePage = document.getElementById('homePage');
 const profilePage = document.getElementById('profilePage');
 const themeIcon = document.getElementById('themeIcon');
@@ -41,6 +39,11 @@ function init() {
     createSparkles();
     loadTrendingSongs();
     setupEventListeners();
+
+    // Detect first user interaction for autoplay
+    document.addEventListener('click', () => {
+        userInteracted = true;
+    }, { once: true });
 }
 
 // Load trending songs from YouTube
@@ -114,13 +117,13 @@ function playYouTubeSong(video, index) {
             width: '0',
             videoId: video.id.videoId,
             events: {
-                'onReady': (event) => event.target.playVideo(),
+                'onReady': (event) => { if(userInteracted) event.target.playVideo(); },
                 'onStateChange': onPlayerStateChange
             }
         });
     } else {
         player.loadVideoById(video.id.videoId);
-        player.playVideo();
+        if(userInteracted) player.playVideo();
     }
 
     playIcon.className = 'fas fa-pause';
@@ -156,7 +159,6 @@ async function searchYouTubeMusic(query) {
 // Play/Pause toggle
 function togglePlay() {
     if (!player) return;
-
     const state = player.getPlayerState();
     if (state === YT.PlayerState.PLAYING) {
         player.pauseVideo();
@@ -179,13 +181,6 @@ function previousSong() {
     if (!currentYouTubeResults.length) return;
     currentSongIndex = (currentSongIndex - 1 + currentYouTubeResults.length) % currentYouTubeResults.length;
     playYouTubeSong(currentYouTubeResults[currentSongIndex], currentSongIndex);
-}
-
-// Format time
-function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
 // Show page
@@ -220,11 +215,8 @@ function toggleTheme() {
 function setupEventListeners() {
     searchInput.addEventListener('input', function(e) {
         const query = e.target.value.trim();
-        if (query === '') {
-            loadTrendingSongs();
-            return;
-        }
-        searchYouTubeMusic(query);
+        if (query === '') loadTrendingSongs();
+        else searchYouTubeMusic(query);
     });
 
     searchInput.addEventListener('keypress', function(e) {
