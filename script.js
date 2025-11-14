@@ -19,7 +19,6 @@ let isPlaying = false;
 let currentSongIndex = 0;
 let currentYouTubeResults = [];
 let audioContext;
-let audioElement;
 
 // DOM elements
 const trendingSongsGrid = document.getElementById('trendingSongs');
@@ -38,13 +37,6 @@ const profilePage = document.getElementById('profilePage');
 const themeIcon = document.getElementById('themeIcon');
 const searchInput = document.getElementById('searchInput');
 
-// Real working music URLs
-const realMusicFiles = [
-    "https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav", // Test sound 1
-    "https://www.soundjay.com/button/sounds/beep-07.wav",     // Test sound 2
-    "https://www.soundjay.com/button/sounds/beep-08.wav"      // Test sound 3
-];
-
 // Initialize the app
 function init() {
     createSparkles();
@@ -56,13 +48,42 @@ function init() {
 // Initialize audio system
 function initializeAudio() {
     try {
-        // Create audio context for modern browsers
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        audioElement = new Audio();
-        
-        console.log('Audio system initialized');
+        console.log('Audio system ready');
     } catch (error) {
-        console.log('Audio context not supported:', error);
+        console.log('Audio not supported:', error);
+    }
+}
+
+// Play sound with user interaction
+function playSound() {
+    if (!audioContext) return false;
+    
+    try {
+        // Resume if suspended
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 523.25;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+        
+        return true;
+    } catch (error) {
+        console.log('Sound play failed:', error);
+        return false;
     }
 }
 
@@ -110,9 +131,12 @@ function createYouTubeSongCard(video, index) {
     return card;
 }
 
-// Play YouTube song WITH GUARANTEED SOUND
+// Play YouTube song
 function playYouTubeSong(video, index) {
     currentSongIndex = index;
+    
+    // Try to play sound immediately
+    const soundPlayed = playSound();
     
     // Add glow effect to music player
     musicPlayer.style.background = 'linear-gradient(90deg, #8B5CF6, #EC4899)';
@@ -124,91 +148,59 @@ function playYouTubeSong(video, index) {
     musicPlayer.classList.add('active');
     lyricsContainer.classList.add('active');
     
-    // Show playing message
-    lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
-        <i class="fas fa-music"></i><br>
-        Now Playing: ${video.snippet.title}<br>
-        <small>Click play button for sound!</small>
-    </div>`;
-    
-    // Auto-play sound with user interaction
-    playSoundWithInteraction();
-}
-
-// Play sound with user interaction (required for mobile)
-function playSoundWithInteraction() {
-    // Create a temporary play button that user must click
-    lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
-        <i class="fas fa-music"></i><br>
-        Ready: ${nowPlayingTitle.textContent}<br>
-        <small>Click below to enable sound</small><br>
-        <button onclick="startRealSound()" style="background: linear-gradient(45deg, #8B5CF6, #EC4899); color: white; border: none; padding: 12px 25px; border-radius: 25px; margin-top: 10px; cursor: pointer; font-size: 16px; font-weight: bold;">
-            🔊 PLAY SOUND
-        </button>
-    </div>`;
-}
-
-// Start real sound after user interaction
-function startRealSound() {
-    try {
-        // Resume audio context if suspended
-        if (audioContext && audioContext.state === 'suspended') {
-            audioContext.resume();
-        }
-        
-        // Use simple beep sound that works on all devices
-        playBeepSound();
-        
-        // Update UI
-        isPlaying = true;
-        playIcon.className = 'fas fa-pause';
-        
-        // Start progress and glow effects
-        startProgressAnimation();
-        startGlowEffect();
-        
-        // Update lyrics
+    // Show status based on sound
+    if (soundPlayed) {
         lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
             <i class="fas fa-volume-up"></i><br>
-            Playing: ${nowPlayingTitle.textContent}<br>
-            <small>Sound enabled! Enjoy the music!</small>
+            Now Playing: ${video.snippet.title}<br>
+            <small style="color: #10B981;">✅ Sound is working!</small>
         </div>`;
-        
-    } catch (error) {
-        console.log('Sound error:', error);
-        showYouTubeOption();
+    } else {
+        lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
+            <i class="fas fa-music"></i><br>
+            ${video.snippet.title}<br>
+            <small style="color: #EF4444;">🔇 Enable sound in browser settings</small>
+        </div>`;
     }
+    
+    // Start music effects
+    startMusicEffects();
 }
 
-// Play simple beep sound (works on all devices)
-function playBeepSound() {
-    try {
-        // Method 1: Web Audio API beep
-        if (audioContext) {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 440; // A4 note
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 1);
-        }
-        
-        // Method 2: HTML5 Audio fallback
-        const beep = new Audio();
-        beep.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==";
-        beep.play().catch(e => console.log('Beep failed:', e));
-        
-    } catch (error) {
-        console.log('Beep failed:', error);
-    }
+// Start music effects
+function startMusicEffects() {
+    isPlaying = true;
+    playIcon.className = 'fas fa-pause';
+    
+    // Start progress animation
+    startProgressAnimation();
+    
+    // Start glow effects
+    startGlowEffect();
+    
+    // Add music visualization
+    addMusicVisualization();
+}
+
+// Add music visualization
+function addMusicVisualization() {
+    const visualizerHTML = `
+        <div style="display: flex; justify-content: center; align-items: end; height: 40px; gap: 3px; margin: 15px 0;">
+            <div style="width: 4px; background: #8B5CF6; animation: equalizerBar 0.5s infinite alternate; animation-delay: 0s;"></div>
+            <div style="width: 4px; background: #EC4899; animation: equalizerBar 0.7s infinite alternate; animation-delay: 0.1s;"></div>
+            <div style="width: 4px; background: #8B5CF6; animation: equalizerBar 0.6s infinite alternate; animation-delay: 0.2s;"></div>
+            <div style="width: 4px; background: #EC4899; animation: equalizerBar 0.8s infinite alternate; animation-delay: 0.3s;"></div>
+            <div style="width: 4px; background: #8B5CF6; animation: equalizerBar 0.5s infinite alternate; animation-delay: 0.4s;"></div>
+        </div>
+        <style>
+            @keyframes equalizerBar {
+                0% { height: 5px; }
+                100% { height: 30px; }
+            }
+        </style>
+    `;
+    
+    lyricsContent.innerHTML += visualizerHTML;
 }
 
 // Start progress animation
@@ -218,7 +210,7 @@ function startProgressAnimation() {
     totalTime.textContent = '3:45';
     
     let currentSeconds = 0;
-    const totalSeconds = 225; // 3:45 minutes
+    const totalSeconds = 225;
     
     const progressInterval = setInterval(() => {
         if (!isPlaying) {
@@ -253,26 +245,6 @@ function startGlowEffect() {
         musicPlayer.style.boxShadow = `0 0 ${glowValue}px rgba(139, 92, 246, 0.8)`;
         
     }, 100);
-}
-
-// Show YouTube option
-function showYouTubeOption() {
-    lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
-        <i class="fas fa-headphones"></i><br>
-        ${nowPlayingTitle.textContent}<br>
-        <small>Listen on YouTube for best experience</small><br>
-        <button onclick="openYouTube()" style="background: red; color: white; border: none; padding: 12px 25px; border-radius: 25px; margin-top: 10px; cursor: pointer; font-size: 16px;">
-            🎵 Open YouTube
-        </button>
-    </div>`;
-}
-
-// Open YouTube
-function openYouTube() {
-    if (currentYouTubeResults[currentSongIndex]) {
-        const videoId = currentYouTubeResults[currentSongIndex].id.videoId;
-        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-    }
 }
 
 // Search YouTube for music
@@ -312,7 +284,7 @@ function togglePlay() {
         if (!musicPlayer.classList.contains('active')) {
             playYouTubeSong(currentYouTubeResults[0], 0);
         } else {
-            startRealSound();
+            startMusicEffects();
         }
     }
 }
@@ -419,7 +391,7 @@ function setupEventListeners() {
         }
     });
 
-    // User interaction for audio
+    // Auto sound enable on any click
     document.addEventListener('click', function() {
         if (audioContext && audioContext.state === 'suspended') {
             audioContext.resume();
