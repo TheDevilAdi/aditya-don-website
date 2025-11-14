@@ -1,7 +1,7 @@
 // script.js - APNA MUSIC Player
 const API_KEYS = [
-    "AIzaSyAn0lm3Wy1YCMCLrS7iAr2N5eam3h9vStc",  // New API Key 2
-    "YOUR_BACKUP_KEY_HERE"  // Backup key agar chahiye to
+    "AIzaSyB2uQcXxBMyTmEw_ePWdV4cl7VFVo6ib3M",  // New API Key
+    "AIzaSyAn0lm3Wy1YCMCLrS7iAr2N5eam3h9vStc"   // Backup Key
 ];
 
 let currentApiKeyIndex = 0;
