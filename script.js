@@ -4,7 +4,7 @@
 // Replace the placeholder below with your NEW API key LOCALLY.
 // Do NOT commit the actual key to GitHub or share it publicly.
 // Delete the old leaked key from Google Cloud Console immediately.
-const YOUTUBE_API_KEY = 'YOUR_API_KEY_HERE';
+const YOUTUBE_API_KEY = 'AIzaSyCf61kjJf-3EW3AgDAtmoj7LgrPHM_uTgY';
 
 // Create sparkle background
 function createSparkles() {
