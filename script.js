@@ -1,7 +1,10 @@
-// ---------- script.js (REPLACE YOUR EXISTING FILE WITH THIS) ----------
+// ---------- script.js (FINAL) ----------
 
-// YouTube API Configuration
-const YOUTUBE_API_KEY = 'AIzaSyBe358vzxK0I5xUcAYGYMAjWH9CyGIv2sk'; // Replace if you generate a new key
+// ====== IMPORTANT ======
+// Replace the placeholder below with your NEW API key LOCALLY.
+// Do NOT commit the actual key to GitHub or share it publicly.
+// Delete the old leaked key from Google Cloud Console immediately.
+const YOUTUBE_API_KEY = 'YOUR_API_KEY_HERE';
 
 // Create sparkle background
 function createSparkles() {
@@ -18,41 +21,29 @@ function createSparkles() {
     }
 }
 
-// Fallback sample songs (used when API fails)
+// Fallback sample songs (shown when API fails)
 const fallbackSongs = [
     {
         id: { videoId: 'kJQP7kiw5Fk' },
-        snippet: {
-            title: 'Sample Song 1 (Demo)',
-            channelTitle: 'Demo Channel',
-            thumbnails: { medium: { url: 'https://via.placeholder.com/320x180?text=Demo+1' } }
-        }
+        snippet: { title: 'Sample Song 1 (Demo)', channelTitle: 'Demo Channel', thumbnails: { medium: { url: 'https://via.placeholder.com/320x180?text=Demo+1' } } }
     },
     {
         id: { videoId: '3JZ4pnNtyxQ' },
-        snippet: {
-            title: 'Sample Song 2 (Demo)',
-            channelTitle: 'Demo Channel',
-            thumbnails: { medium: { url: 'https://via.placeholder.com/320x180?text=Demo+2' } }
-        }
+        snippet: { title: 'Sample Song 2 (Demo)', channelTitle: 'Demo Channel', thumbnails: { medium: { url: 'https://via.placeholder.com/320x180?text=Demo+2' } } }
     },
     {
         id: { videoId: 'fRh_vgS2dFE' },
-        snippet: {
-            title: 'Sample Song 3 (Demo)',
-            channelTitle: 'Demo Channel',
-            thumbnails: { medium: { url: 'https://via.placeholder.com/320x180?text=Demo+3' } }
-        }
+        snippet: { title: 'Sample Song 3 (Demo)', channelTitle: 'Demo Channel', thumbnails: { medium: { url: 'https://via.placeholder.com/320x180?text=Demo+3' } } }
     }
 ];
 
-// Global Variables
+// Globals
 let currentSongIndex = 0;
 let currentYouTubeResults = [];
 let player = null;
 let userInteracted = false;
 
-// DOM elements (safe-get)
+// Safe DOM grabs
 const trendingSongsGrid = document.getElementById('trendingSongs');
 const musicPlayer = document.getElementById('musicPlayer');
 const nowPlayingTitle = document.getElementById('nowPlayingTitle');
@@ -66,53 +57,46 @@ const homePage = document.getElementById('homePage');
 const profilePage = document.getElementById('profilePage');
 const themeIcon = document.getElementById('themeIcon');
 
-// Initialize
+// Init
 function init() {
     createSparkles();
     setupEventListeners();
 
-    // First user click detection (for autoplay policy)
-    document.addEventListener('click', () => {
-        userInteracted = true;
-    }, { once: true });
+    // For autoplay policy: detect first real user interaction
+    document.addEventListener('click', () => { userInteracted = true; }, { once: true });
 
-    // Try loading trending songs (with fallback on fail)
     loadTrendingSongs();
 }
 
-// Load trending songs with error handling
+// Load trending songs with robust error handling
 async function loadTrendingSongs() {
     if (!trendingSongsGrid) return;
-
-    trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading trending songs...</div>';
+    trendingSongsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;">Loading trending songs...</div>';
 
     try {
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=trending%20songs%202024%20bollywood&type=video&key=${YOUTUBE_API_KEY}`;
-        const response = await fetch(url);
-        const data = await response.json();
+        const res = await fetch(url);
+        const data = await res.json();
 
-        // Debug for mobile: show the response error via alert if something wrong
         if (data.error) {
-            // Show brief alert (mobile friendly)
+            // Show friendly message and fallback
             alert('YouTube API error: ' + (data.error.message || JSON.stringify(data.error)));
             console.error('YouTube API error:', data);
-            // Use fallback UI
             currentYouTubeResults = fallbackSongs;
             displayYouTubeSongs(currentYouTubeResults, true);
             return;
         }
 
-        if (data.items && data.items.length > 0) {
+        if (data.items && data.items.length) {
             currentYouTubeResults = data.items;
             displayYouTubeSongs(data.items);
         } else {
-            // No items returned -> use fallback
-            trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">No songs returned from API. Showing demo songs.</div>';
+            // No items -> fallback
+            trendingSongsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;">No songs from API. Showing demo songs.</div>';
             currentYouTubeResults = fallbackSongs;
             displayYouTubeSongs(currentYouTubeResults, true);
         }
     } catch (err) {
-        // Network or parsing error
         console.error('Fetch error:', err);
         alert('Network/API fetch failed. Showing demo songs.');
         currentYouTubeResults = fallbackSongs;
@@ -120,44 +104,41 @@ async function loadTrendingSongs() {
     }
 }
 
-// Display songs (videos) on the grid
+// Display songs grid
 function displayYouTubeSongs(videos, isFallback = false) {
     if (!trendingSongsGrid) return;
     trendingSongsGrid.innerHTML = '';
-
     videos.forEach((video, index) => {
-        const card = createYouTubeSongCard(video, index, isFallback);
+        const card = createYouTubeSongCard(video, index);
         trendingSongsGrid.appendChild(card);
     });
 }
 
-// Create song card
-function createYouTubeSongCard(video, index, isFallback = false) {
+// Create a song card
+function createYouTubeSongCard(video, index) {
     const card = document.createElement('div');
     card.className = 'song-card';
     const thumb = (video.snippet && video.snippet.thumbnails && video.snippet.thumbnails.medium && video.snippet.thumbnails.medium.url) || 'https://via.placeholder.com/320x180?text=No+Image';
     const title = (video.snippet && video.snippet.title) || 'Unknown Title';
     const channel = (video.snippet && video.snippet.channelTitle) || 'Unknown Artist';
-
     card.innerHTML = `
         <div class="song-image">
-            <img src="${thumb}" alt="${title}" style="width: 100%; height: 100%; border-radius: 4px; object-fit: cover;">
+            <img src="${thumb}" alt="${title}" style="width:100%;height:100%;border-radius:4px;object-fit:cover;">
         </div>
         <div class="song-title">${title}</div>
         <div class="song-artist">${channel}</div>
     `;
-    card.addEventListener('click', () => playYouTubeSong(video, index, isFallback));
+    card.addEventListener('click', () => playYouTubeSong(video, index));
     return card;
 }
 
-// Play song using YouTube iframe API (works also in fallback: loads videoId from fallback item)
-function playYouTubeSong(video, index, isFallback = false) {
+// Play a song via YouTube IFrame API
+function playYouTubeSong(video, index) {
     currentSongIndex = index;
 
-    // Apply UI glow
     if (musicPlayer) {
         musicPlayer.style.background = 'linear-gradient(90deg, #8B5CF6, #EC4899)';
-        musicPlayer.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.7)';
+        musicPlayer.style.boxShadow = '0 0 30px rgba(139,92,246,0.7)';
         musicPlayer.classList.add('active');
     }
     if (lyricsContainer) lyricsContainer.classList.add('active');
@@ -167,20 +148,10 @@ function playYouTubeSong(video, index, isFallback = false) {
     if (nowPlayingTitle) nowPlayingTitle.textContent = title;
     if (nowPlayingArtist) nowPlayingArtist.textContent = channel;
 
-    if (!video.id || (!video.id.videoId && !video.id)) {
-        // Try alternative shapes
-        const altVideoId = video.videoId || (video.id && video.id.videoId) || (video.resourceId && video.resourceId.videoId);
-        if (altVideoId) video.id = { videoId: altVideoId };
-    }
-
-    // Initialize or load YouTube player
+    // normalize video id
     const vid = (video.id && video.id.videoId) || video.videoId || null;
-    if (!vid) {
-        alert('Cannot play this item (no videoId).');
-        return;
-    }
+    if (!vid) { alert('Cannot play this item (no videoId).'); return; }
 
-    // If player not created yet, create it
     if (!player) {
         try {
             player = new YT.Player('audioPlayer', {
@@ -189,24 +160,19 @@ function playYouTubeSong(video, index, isFallback = false) {
                 videoId: vid,
                 playerVars: { 'playsinline': 1 },
                 events: {
-                    'onReady': (event) => {
-                        if (userInteracted) {
-                            event.target.playVideo();
-                        } else {
-                            // update UI, show that user must press play
-                            if (lyricsContent) lyricsContent.innerHTML = '<div style="text-align:center;color:var(--primary);">Tap anywhere or press play to start audio.</div>';
-                        }
+                    'onReady': (e) => {
+                        if (userInteracted) e.target.playVideo();
+                        else if (lyricsContent) lyricsContent.innerHTML = '<div style="text-align:center;color:var(--primary);">Tap anywhere or press play to start audio.</div>';
                     },
                     'onStateChange': onPlayerStateChange
                 }
             });
         } catch (e) {
-            console.error('YT Player creation failed', e);
-            alert('Player init failed. Try refreshing page.');
+            console.error('YT Player init error', e);
+            alert('Player init failed. Refresh and try again.');
             return;
         }
     } else {
-        // Load video and play if user interacted
         try {
             player.loadVideoById(vid);
             if (userInteracted) player.playVideo();
@@ -219,21 +185,18 @@ function playYouTubeSong(video, index, isFallback = false) {
     if (playIcon) playIcon.className = 'fas fa-pause';
 }
 
-// Player state change
 function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) {
-        nextSong();
-    }
+    if (event.data === YT.PlayerState.ENDED) nextSong();
 }
 
-// Search helper with same error handling
+// Search with same error handling
 async function searchYouTubeMusic(query) {
     if (!trendingSongsGrid) return;
-    trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Searching...</div>';
+    trendingSongsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;">Searching...</div>';
     try {
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(query + ' song official music')}&type=video&key=${YOUTUBE_API_KEY}`;
-        const response = await fetch(url);
-        const data = await response.json();
+        const res = await fetch(url);
+        const data = await res.json();
         if (data.error) {
             alert('YouTube API error: ' + (data.error.message || JSON.stringify(data.error)));
             console.error('YouTube API error:', data);
@@ -245,12 +208,12 @@ async function searchYouTubeMusic(query) {
             currentYouTubeResults = data.items;
             displayYouTubeSongs(data.items);
         } else {
-            trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">No results. Showing demo songs.</div>';
+            trendingSongsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;">No results. Showing demo songs.</div>';
             currentYouTubeResults = fallbackSongs;
             displayYouTubeSongs(currentYouTubeResults, true);
         }
     } catch (err) {
-        console.error('Search fetch error:', err);
+        console.error('Search fetch error', err);
         alert('Search failed (network). Showing demo songs.');
         currentYouTubeResults = fallbackSongs;
         displayYouTubeSongs(currentYouTubeResults, true);
@@ -270,7 +233,6 @@ function togglePlay() {
     }
 }
 
-// Next / Previous
 function nextSong() {
     if (!currentYouTubeResults.length) return;
     currentSongIndex = (currentSongIndex + 1) % currentYouTubeResults.length;
@@ -282,10 +244,8 @@ function previousSong() {
     playYouTubeSong(currentYouTubeResults[currentSongIndex]);
 }
 
-// Seek (progress bar)
+// Seek (UI) - uses player.seekTo if available
 function seekSong(event) {
-    // Since we don't have exact duration synced with YT easily here, this is a UI-only seek placeholder
-    // You can implement precise seeking using player.getDuration() and player.seekTo(seconds, true)
     if (!player) return;
     const progressBar = event.currentTarget;
     const clickPosition = event.offsetX;
@@ -298,25 +258,16 @@ function seekSong(event) {
     }
 }
 
-// Page nav & theme
+// Navigation and theme
 function showPage(page) {
     if (homePage) homePage.style.display = 'none';
     if (profilePage) profilePage.style.display = 'none';
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    try {
-        event.currentTarget.classList.add('active');
-    } catch (e) {}
-    if (page === 'home') {
-        if (homePage) homePage.style.display = 'block';
-        loadTrendingSongs();
-    } else if (page === 'profile') {
-        if (profilePage) profilePage.style.display = 'block';
-    } else if (page === 'search') {
-        if (homePage) homePage.style.display = 'block';
-    } else if (page === 'library') {
-        if (homePage) homePage.style.display = 'block';
-        loadTrendingSongs();
-    }
+    try { event.currentTarget.classList.add('active'); } catch(e) {}
+    if (page === 'home') { if (homePage) homePage.style.display = 'block'; loadTrendingSongs(); }
+    else if (page === 'profile') { if (profilePage) profilePage.style.display = 'block'; }
+    else if (page === 'search') { if (homePage) homePage.style.display = 'block'; }
+    else if (page === 'library') { if (homePage) homePage.style.display = 'block'; loadTrendingSongs(); }
 }
 function toggleTheme() {
     document.body.classList.toggle('light-theme');
@@ -341,5 +292,5 @@ function setupEventListeners() {
     if (playBtn) playBtn.addEventListener('click', togglePlay);
 }
 
-// Initialize on DOM ready
+// DOM ready
 document.addEventListener('DOMContentLoaded', init);
