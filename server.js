@@ -6,67 +6,54 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const JIOSAAVN_API = "https://saavn.me";
+// Working Music API - No restrictions
+const MUSIC_API = "https://itunes.apple.com";
 
-// Search Songs
 app.get('/api/search', async (req, res) => {
     try {
         const query = req.query.q;
-        
-        const response = await fetch(`${JIOSAAVN_API}/search/songs?query=${query}&page=1&limit=15`);
+        const response = await fetch(`${MUSIC_API}/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
         const data = await response.json();
         
-        if (data.data && data.data.results) {
-            const songs = data.data.results.map(song => ({
-                id: { videoId: song.id },
-                snippet: {
-                    title: song.name,
-                    channelTitle: song.primaryArtists || "Unknown Artist",
-                    thumbnails: {
-                        medium: { url: song.image[2].link || song.image[1].link }
-                    }
+        const songs = data.results.map(track => ({
+            id: { videoId: track.trackId || track.collectionId },
+            snippet: {
+                title: track.trackName || track.collectionName,
+                channelTitle: track.artistName,
+                thumbnails: {
+                    medium: { url: track.artworkUrl100 || track.artworkUrl60 }
                 }
-            }));
-            res.json(songs);
-        } else {
-            res.json([]);
-        }
+            }
+        }));
+        
+        res.json(songs);
     } catch (error) {
         console.error('Search error:', error);
         res.status(500).json({ error: "Server error" });
     }
 });
 
-// Trending Songs
 app.get('/api/trending', async (req, res) => {
     try {
-        const response = await fetch(`${JIOSAAVN_API}/search/songs?query=trending&page=1&limit=15`);
+        const response = await fetch(`${MUSIC_API}/search?term=bollywood&media=music&limit=15`);
         const data = await response.json();
         
-        if (data.data && data.data.results) {
-            const songs = data.data.results.map(song => ({
-                id: { videoId: song.id },
-                snippet: {
-                    title: song.name,
-                    channelTitle: song.primaryArtists || "Unknown Artist",
-                    thumbnails: {
-                        medium: { url: song.image[2].link || song.image[1].link }
-                    }
+        const songs = data.results.map(track => ({
+            id: { videoId: track.trackId || track.collectionId },
+            snippet: {
+                title: track.trackName || track.collectionName,
+                channelTitle: track.artistName,
+                thumbnails: {
+                    medium: { url: track.artworkUrl100 || track.artworkUrl60 }
                 }
-            }));
-            res.json(songs);
-        } else {
-            res.json([]);
-        }
+            }
+        }));
+        
+        res.json(songs);
     } catch (error) {
         console.error('Trending error:', error);
         res.status(500).json({ error: "Server error" });
     }
-});
-
-// Health Check
-app.get('/', (req, res) => {
-    res.json({ message: 'APNA MUSIC Backend with JioSaavn API!' });
 });
 
 const PORT = process.env.PORT || 10000;
