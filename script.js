@@ -15,11 +15,9 @@ function createSparkles() {
 }
 
 // Global Variables
-let currentAudio = null;
-let isPlaying = false;
 let currentSongIndex = 0;
-let lyricsInterval;
 let currentYouTubeResults = [];
+let player = null;
 
 // DOM elements
 const trendingSongsGrid = document.getElementById('trendingSongs');
@@ -33,11 +31,10 @@ const currentTime = document.getElementById('currentTime');
 const totalTime = document.getElementById('totalTime');
 const lyricsContainer = document.getElementById('lyricsContainer');
 const lyricsContent = document.getElementById('lyricsContent');
-const audioPlayer = document.getElementById('audioPlayer');
+const searchInput = document.getElementById('searchInput');
 const homePage = document.getElementById('homePage');
 const profilePage = document.getElementById('profilePage');
 const themeIcon = document.getElementById('themeIcon');
-const searchInput = document.getElementById('searchInput');
 
 // Initialize the app
 function init() {
@@ -90,70 +87,53 @@ function createYouTubeSongCard(video, index) {
     return card;
 }
 
-// Play YouTube song
+// Play YouTube song using IFrame API
 function playYouTubeSong(video, index) {
     currentSongIndex = index;
-    
-    // Add glow effect to music player
+
+    // Add glow effect
     musicPlayer.style.background = 'linear-gradient(90deg, #8B5CF6, #EC4899)';
     musicPlayer.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.7)';
-    
+
     // Update UI
     nowPlayingTitle.textContent = video.snippet.title;
     nowPlayingArtist.textContent = video.snippet.channelTitle;
     musicPlayer.classList.add('active');
     lyricsContainer.classList.add('active');
-    
-    // Show playing message
+
     lyricsContent.innerHTML = `<div style="text-align: center; color: var(--primary); font-size: 18px;">
         <i class="fas fa-music"></i><br>
         Now Playing: ${video.snippet.title}<br>
         <small>Click play button to start</small>
     </div>`;
-    
-    // Set audio source (simulated for demo)
-    // In real implementation, you would use YouTube IFrame API
-    simulateAudioPlayback(video);
-}
 
-// Simulate audio playback with glow effects
-function simulateAudioPlayback(video) {
-    isPlaying = true;
+    // Initialize or load video in player
+    if (!player) {
+        player = new YT.Player('audioPlayer', {
+            height: '0',
+            width: '0',
+            videoId: video.id.videoId,
+            events: {
+                'onReady': (event) => event.target.playVideo(),
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    } else {
+        player.loadVideoById(video.id.videoId);
+        player.playVideo();
+    }
+
     playIcon.className = 'fas fa-pause';
-    
-    // Reset progress
-    progress.style.width = '0%';
-    currentTime.textContent = '0:00';
-    totalTime.textContent = '3:00';
-    
-    // Add pulsing glow effect
-    let glowIntensity = 0;
-    const glowInterval = setInterval(() => {
-        if (!isPlaying) {
-            clearInterval(glowInterval);
-            musicPlayer.style.boxShadow = 'none';
-            return;
-        }
-        
-        glowIntensity += 0.1;
-        const glowValue = Math.abs(Math.sin(glowIntensity)) * 30;
-        musicPlayer.style.boxShadow = `0 0 ${glowValue}px rgba(139, 92, 246, 0.7)`;
-        
-        // Update progress
-        const currentProgress = (glowIntensity / 30) * 100;
-        if (currentProgress <= 100) {
-            progress.style.width = currentProgress + '%';
-            currentTime.textContent = formatTime((glowIntensity / 30) * 180);
-        }
-        
-        if (glowIntensity >= 30) {
-            clearInterval(glowInterval);
-            nextSong();
-        }
-    }, 100);
 }
 
-// Search YouTube for music
+// Handle player state change
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.ENDED) {
+        nextSong();
+    }
+}
+
+// Search YouTube music
 async function searchYouTubeMusic(query) {
     try {
         trendingSongsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary)">Searching...</div>';
@@ -173,30 +153,23 @@ async function searchYouTubeMusic(query) {
     }
 }
 
-// Toggle play/pause
+// Play/Pause toggle
 function togglePlay() {
-    if (!currentYouTubeResults.length) return;
-    
-    if (isPlaying) {
-        // Pause logic
-        isPlaying = false;
+    if (!player) return;
+
+    const state = player.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
         playIcon.className = 'fas fa-play';
-        musicPlayer.style.boxShadow = '0 0 20px rgba(139, 92, 246, 0.5)';
     } else {
-        // Play logic
-        isPlaying = true;
+        player.playVideo();
         playIcon.className = 'fas fa-pause';
-        
-        if (!musicPlayer.classList.contains('active')) {
-            playYouTubeSong(currentYouTubeResults[0], 0);
-        }
     }
 }
 
 // Next song
 function nextSong() {
     if (!currentYouTubeResults.length) return;
-    
     currentSongIndex = (currentSongIndex + 1) % currentYouTubeResults.length;
     playYouTubeSong(currentYouTubeResults[currentSongIndex], currentSongIndex);
 }
@@ -204,22 +177,8 @@ function nextSong() {
 // Previous song
 function previousSong() {
     if (!currentYouTubeResults.length) return;
-    
     currentSongIndex = (currentSongIndex - 1 + currentYouTubeResults.length) % currentYouTubeResults.length;
     playYouTubeSong(currentYouTubeResults[currentSongIndex], currentSongIndex);
-}
-
-// Seek song
-function seekSong(event) {
-    if (!currentYouTubeResults.length) return;
-    
-    const progressBar = event.currentTarget;
-    const clickPosition = event.offsetX;
-    const progressBarWidth = progressBar.offsetWidth;
-    const percentage = clickPosition / progressBarWidth;
-    
-    progress.style.width = (percentage * 100) + '%';
-    currentTime.textContent = formatTime(percentage * 180);
 }
 
 // Format time
@@ -234,9 +193,7 @@ function showPage(page) {
     homePage.style.display = 'none';
     profilePage.style.display = 'none';
     
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     event.currentTarget.classList.add('active');
     
     if (page === 'home') {
@@ -247,7 +204,6 @@ function showPage(page) {
         profilePage.classList.add('active');
     } else if (page === 'search') {
         homePage.style.display = 'block';
-        // Search page will be handled by search input
     } else if (page === 'library') {
         homePage.style.display = 'block';
         loadTrendingSongs();
@@ -257,44 +213,28 @@ function showPage(page) {
 // Toggle theme
 function toggleTheme() {
     document.body.classList.toggle('light-theme');
-    if (document.body.classList.contains('light-theme')) {
-        themeIcon.className = 'fas fa-sun';
-    } else {
-        themeIcon.className = 'fas fa-moon';
-    }
-}
-
-// Show login
-function showLogin() {
-    alert('Login feature will be implemented soon!');
-}
-
-// Show premium
-function showPremium() {
-    alert('Premium features coming soon!');
+    themeIcon.className = document.body.classList.contains('light-theme') ? 'fas fa-sun' : 'fas fa-moon';
 }
 
 // Setup event listeners
 function setupEventListeners() {
-    // Search functionality
     searchInput.addEventListener('input', function(e) {
         const query = e.target.value.trim();
-        
         if (query === '') {
             loadTrendingSongs();
             return;
         }
-
         searchYouTubeMusic(query);
     });
 
-    // Enter key for search
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             searchYouTubeMusic(searchInput.value.trim());
             this.blur();
         }
     });
+
+    playBtn.addEventListener('click', togglePlay);
 }
 
 // Initialize the app
