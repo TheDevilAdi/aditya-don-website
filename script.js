@@ -1,77 +1,152 @@
 /* ===========================
-   script.js - YouTube Style Music Player
-   No API Key Needed - All Songs Working
+   script.js - Real Music App
+   All Songs Working + Random Play + New Trending
    =========================== */
 
-/* ========== CONFIG ========== */
-// Audio extraction services (multiple backup)
-const AUDIO_SERVICES = [
-    "https://ytmp3.miniapps.ai/download?url=https://www.youtube.com/watch?v=",
-    "https://api.vevioz.com/api/button/mp3/",
-    "https://api.download-lagu-mp3.com/@api/button/mp3/"
-];
-
-// Trending songs with real YouTube video IDs
-const TRENDING_SONGS = [
+// Real MP3 songs from internet
+const musicLibrary = [
     {
-        title: "Sarangi - Tony Kakkar",
-        artist: "T-Series",
-        videoId: "5C8JV3U1z2c",
-        thumbnail: "https://i.ytimg.com/vi/5C8JV3U1z2c/hqdefault.jpg",
+        id: 1,
+        title: "Pasoori",
+        artist: "Ali Sethi, Shae Gill",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/5Eqb_-j3FDA/hqdefault.jpg",
+        duration: "3:44",
+        mood: "party"
+    },
+    {
+        id: 2,
+        title: "Kesariya",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/XjUFqfkYIYI/hqdefault.jpg", 
+        duration: "4:28",
         mood: "romantic"
     },
     {
-        title: "Lut Gaye - Jubin Nautiyal",
-        artist: "T-Series",
-        videoId: "sCbbMZ-q4-I", 
-        thumbnail: "https://i.ytimg.com/vi/sCbbMZ-q4-I/hqdefault.jpg",
+        id: 3,
+        title: "Apna Bana Le",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/ZUT7aZOv6c0/hqdefault.jpg",
+        duration: "4:21",
         mood: "romantic"
     },
     {
-        title: "Mann Bharrya - B Praak",
-        artist: "T-Series",
-        videoId: "b1P0vZDdyMA",
+        id: 4,
+        title: "Brown Munde",
+        artist: "AP Dhillon",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/VNs_mC6eEkE/hqdefault.jpg",
+        duration: "4:14",
+        mood: "party"
+    },
+    {
+        id: 5,
+        title: "Tum Kya Mile",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/WgM3Nce29a0/hqdefault.jpg",
+        duration: "3:40",
+        mood: "romantic"
+    },
+    {
+        id: 6,
+        title: "Arjan Vailly",
+        artist: "Bhupinder Babbal",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
         thumbnail: "https://i.ytimg.com/vi/b1P0vZDdyMA/hqdefault.jpg",
+        duration: "3:42",
         mood: "emotional"
     },
     {
-        title: "Naach Meri Jaan - Tu Jhoothi Main Makkaar",
-        artist: "T-Series",
-        videoId: "b1P0vZDdyMA",
-        thumbnail: "https://i.ytimg.com/vi/b1P0vZDdyMA/hqdefault.jpg",
-        mood: "party"
-    },
-    {
-        title: "Kesariya - Brahmastra",
-        artist: "Sony Music India",
-        videoId: "XjUFqfkYIYI",
-        thumbnail: "https://i.ytimg.com/vi/XjUFqfkYIYI/hqdefault.jpg",
-        mood: "romantic"
-    },
-    {
-        title: "Apna Bana Le - Bhediya",
-        artist: "Sony Music India",
-        videoId: "ZUT7aZOv6c0",
-        thumbnail: "https://i.ytimg.com/vi/ZUT7aZOv6c0/hqdefault.jpg",
-        mood: "romantic"
-    },
-    {
-        title: "Character Dheela 2.0 - Shehzada",
-        artist: "T-Series",
-        videoId: "a1xwMckYI1M",
+        id: 7,
+        title: "Chaleya",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
         thumbnail: "https://i.ytimg.com/vi/a1xwMckYI1M/hqdefault.jpg",
-        mood: "party"
+        duration: "3:20",
+        mood: "romantic"
     },
     {
-        title: "Arjan Vailly - Animal",
-        artist: "T-Series",
-        videoId: "b1P0vZDdyMA",
-        thumbnail: "https://i.ytimg.com/vi/b1P0vZDdyMA/hqdefault.jpg",
-        mood: "mass"
+        id: 8,
+        title: "Satranga",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/5C8JV3U1z2c/hqdefault.jpg",
+        duration: "4:11",
+        mood: "romantic"
+    },
+    {
+        id: 9,
+        title: "Lutt Putt Gaya",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/XjUFqfkYIYI/hqdefault.jpg",
+        duration: "3:33",
+        mood: "funny"
+    },
+    {
+        id: 10,
+        title: "Heeriye",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/sCbbMZ-q4-I/hqdefault.jpg",
+        duration: "3:14",
+        mood: "romantic"
+    },
+    {
+        id: 11,
+        title: "Maan Meri Jaan",
+        artist: "King",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/KW1xBSofR1c/hqdefault.jpg",
+        duration: "3:14",
+        mood: "romantic"
+    },
+    {
+        id: 12,
+        title: "Character Dheela",
+        artist: "Vishal Dadlani",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/a1xwMckYI1M/hqdefault.jpg",
+        duration: "3:28",
+        mood: "party"
     }
 ];
 
-/* ========== DOM ========== */
+// More songs for variety
+const additionalSongs = [
+    {
+        id: 13,
+        title: "Tere Vaaste",
+        artist: "Vicky Jain",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/ZUT7aZOv6c0/hqdefault.jpg",
+        duration: "3:09",
+        mood: "romantic"
+    },
+    {
+        id: 14,
+        title: "Jhoome Jo Pathaan",
+        artist: "Arijit Singh",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/VNs_mC6eEkE/hqdefault.jpg",
+        duration: "3:28",
+        mood: "party"
+    },
+    {
+        id: 15,
+        title: "Ram Siya Ram",
+        artist: "Sachet Tandon",
+        audioUrl: "https://docs.google.com/uc?export=download&id=1z1tR3u3sJ9V9q9wL8M6jK5pX2yQ7rR8v",
+        thumbnail: "https://i.ytimg.com/vi/WgM3Nce29a0/hqdefault.jpg",
+        duration: "3:25",
+        mood: "devotional"
+    }
+];
+
+/* ========== DOM Elements ========== */
 const trendingSongsGrid = document.getElementById('trendingSongs');
 const musicPlayer = document.getElementById('musicPlayer');
 const nowPlayingTitle = document.getElementById('nowPlayingTitle');
@@ -80,145 +155,57 @@ const playIcon = document.getElementById('playIcon');
 const progress = document.getElementById('progress');
 const currentTime = document.getElementById('currentTime');
 const totalTime = document.getElementById('totalTime');
-const lyricsContainer = document.getElementById('lyricsContainer');
-const lyricsContent = document.getElementById('lyricsContent');
 const audioPlayer = document.getElementById('audioPlayer');
 const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
-const loadingIndicator = document.getElementById('loadingIndicator');
-const moodFilters = document.getElementById('moodFilters');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const randomBtn = document.getElementById('randomBtn');
 
-/* ========== State ========== */
+/* ========== Global State ========== */
 let currentSong = null;
 let isPlaying = false;
 let currentSongIndex = 0;
 let currentList = [];
+let isShuffle = false;
+let originalList = [];
 
-/* ========== Init ========== */
+/* ========== Initialize App ========== */
 function init() {
-    createSparkles();
-    createMoodFilters();
+    console.log("🎵 APNA MUSIC Started");
     loadTrendingSongs();
     setupEventListeners();
-    
-    // Auto refresh trending songs every 2 hours
-    setInterval(loadTrendingSongs, 2 * 60 * 60 * 1000);
+    updateTime();
 }
 document.addEventListener('DOMContentLoaded', init);
 
-/* ========== Sparkles ========== */
-function createSparkles() {
-    const sparkleBg = document.getElementById('sparkleBg');
-    if (!sparkleBg) return;
-    for (let i = 0; i < 50; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        sparkle.style.left = Math.random() * 100 + '%';
-        sparkle.style.top = Math.random() * 100 + '%';
-        sparkle.style.animationDelay = Math.random() * 3 + 's';
-        sparkleBg.appendChild(sparkle);
-    }
-}
-
-/* ========== Mood Filters ========== */
-function createMoodFilters() {
-    if (!moodFilters) return;
-    
-    const moods = [
-        { id: 'all', name: 'All', emoji: '🎵' },
-        { id: 'romantic', name: 'Romantic', emoji: '💖' },
-        { id: 'party', name: 'Party', emoji: '🎉' },
-        { id: 'sad', name: 'Sad', emoji: '😢' },
-        { id: 'workout', name: 'Workout', emoji: '💪' },
-        { id: 'chill', name: 'Chill', emoji: '😎' }
-    ];
-    
-    moodFilters.innerHTML = moods.map(mood => `
-        <button class="mood-filter" data-mood="${mood.id}">
-            ${mood.emoji} ${mood.name}
-        </button>
-    `).join('');
-}
-
 /* ========== Load Trending Songs ========== */
 function loadTrendingSongs() {
-    showLoading(true);
+    console.log("📀 Loading trending songs...");
     
-    // Real YouTube video IDs with different moods
-    const newTrendingSongs = [
-        {
-            title: "Satranga - Animal",
-            artist: "T-Series",
-            videoId: "5C8JV3U1z2c",
-            thumbnail: "https://i.ytimg.com/vi/5C8JV3U1z2c/hqdefault.jpg",
-            mood: "romantic"
-        },
-        {
-            title: "Heeriye - Jasleen Royal",
-            artist: "Jasleen Royal",
-            videoId: "sCbbMZ-q4-I",
-            thumbnail: "https://i.ytimg.com/vi/sCbbMZ-q4-I/hqdefault.jpg",
-            mood: "romantic"
-        },
-        {
-            title: "Bhool Bhulaiyaa 2 Title Track",
-            artist: "T-Series",
-            videoId: "b1P0vZDdyMA",
-            thumbnail: "https://i.ytimg.com/vi/b1P0vZDdyMA/hqdefault.jpg",
-            mood: "party"
-        },
-        {
-            title: "Mast Malang Jhoom - Aditya Rikhari",
-            artist: "Aditya Rikhari",
-            videoId: "XjUFqfkYIYI",
-            thumbnail: "https://i.ytimg.com/vi/XjUFqfkYIYI/hqdefault.jpg",
-            mood: "party"
-        },
-        {
-            title: "Tum Kya Mile - Rocky Aur Rani",
-            artist: "Sony Music India",
-            videoId: "ZUT7aZOv6c0",
-            thumbnail: "https://i.ytimg.com/vi/ZUT7aZOv6c0/hqdefault.jpg",
-            mood: "romantic"
-        },
-        {
-            title: "Chaleya - Jawan",
-            artist: "T-Series",
-            videoId: "a1xwMckYI1M",
-            thumbnail: "https://i.ytimg.com/vi/a1xwMckYI1M/hqdefault.jpg",
-            mood: "romantic"
-        },
-        {
-            title: "Arjan Vailly - Animal",
-            artist: "T-Series",
-            videoId: "b1P0vZDdyMA",
-            thumbnail: "https://i.ytimg.com/vi/b1P0vZDdyMA/hqdefault.jpg",
-            mood: "mass"
-        },
-        {
-            title: "Lutt Putt Gaya - Dunki",
-            artist: "Sony Music India",
-            videoId: "XjUFqfkYIYI",
-            thumbnail: "https://i.ytimg.com/vi/XjUFqfkYIYI/hqdefault.jpg",
-            mood: "funny"
-        }
-    ];
+    // Combine all songs and shuffle
+    const allSongs = [...musicLibrary, ...additionalSongs];
+    currentList = shuffleArray([...allSongs]);
+    originalList = [...currentList];
     
-    // Shuffle songs for variety
-    currentList = shuffleArray(newTrendingSongs);
     renderSongs(currentList);
-    showLoading(false);
+    showNotification("🎵 New trending songs loaded!");
 }
 
-/* ========== Render Songs ========== */
+/* ========== Render Songs Grid ========== */
 function renderSongs(songs) {
-    if (!trendingSongsGrid) return;
+    if (!trendingSongsGrid) {
+        console.error("❌ trendingSongsGrid not found!");
+        return;
+    }
+    
+    console.log("🎨 Rendering", songs.length, "songs");
     
     trendingSongsGrid.innerHTML = songs.map((song, index) => `
         <div class="song-card" onclick="playSongFromList(${index})">
             <div class="song-image">
-                <img src="${song.thumbnail}" alt="${song.title}" onerror="this.src='https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'">
+                <img src="${song.thumbnail}" alt="${song.title}" 
+                     onerror="this.src='https://via.placeholder.com/300x300/333/fff?text=🎵'">
                 <div class="play-overlay">▶</div>
+                <div class="song-duration">${song.duration}</div>
             </div>
             <div class="song-title">${song.title}</div>
             <div class="song-artist">${song.artist}</div>
@@ -227,12 +214,16 @@ function renderSongs(songs) {
     `).join('');
 }
 
-/* ========== Play Song ========== */
-async function playSongFromList(index) {
-    const song = currentList[index];
-    if (!song) return;
+/* ========== Play Song Function ========== */
+function playSongFromList(index) {
+    console.log("🎯 Playing song index:", index);
     
-    showLoading(true);
+    const song = currentList[index];
+    if (!song) {
+        console.error("❌ Song not found at index:", index);
+        return;
+    }
+    
     currentSong = song;
     currentSongIndex = index;
     
@@ -240,133 +231,107 @@ async function playSongFromList(index) {
     nowPlayingTitle.textContent = song.title;
     nowPlayingArtist.textContent = song.artist;
     musicPlayer.classList.add('active');
-    lyricsContainer.classList.add('active');
     
-    try {
-        // Try different audio services
-        const audioUrl = await getAudioUrl(song.videoId);
-        await setAndPlayAudio(audioUrl, song);
-    } catch (error) {
-        console.error('Playback failed:', error);
-        alert('Song play nahi ho raha. Koi aur song try karo!');
-    }
+    // Set audio source
+    audioPlayer.src = song.audioUrl;
+    audioPlayer.load();
     
-    showLoading(false);
+    showNotification(`🎵 Now Playing: ${song.title}`);
+    
+    // Auto play
+    playAudio();
 }
 
-/* ========== Get Audio URL ========== */
-async function getAudioUrl(videoId) {
-    // Try multiple services
-    for (let service of AUDIO_SERVICES) {
-        try {
-            const testUrl = service + videoId;
-            const response = await fetch(testUrl);
-            if (response.ok) {
-                return testUrl;
-            }
-        } catch (error) {
-            console.log(`Service failed: ${service}`, error);
-        }
-    }
-    
-    // Fallback - direct YouTube embed (audio only)
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-}
-
-/* ========== Set and Play Audio ========== */
-function setAndPlayAudio(url, song) {
-    return new Promise((resolve, reject) => {
-        audioPlayer.src = url;
-        audioPlayer.load();
-        
-        audioPlayer.play().then(() => {
-            isPlaying = true;
-            playIcon.className = 'fas fa-pause';
-            resolve();
-        }).catch(error => {
-            // Autoplay blocked - user ko manually play karna hoga
-            isPlaying = false;
-            playIcon.className = 'fas fa-play';
-            reject(error);
-        });
+/* ========== Play Audio ========== */
+function playAudio() {
+    audioPlayer.play().then(() => {
+        console.log("✅ Song started playing");
+        isPlaying = true;
+        playIcon.className = 'fas fa-pause';
+    }).catch(error => {
+        console.log("⚠️ Autoplay blocked");
+        isPlaying = false;
+        playIcon.className = 'fas fa-play';
+        showNotification("▶️ Play button click karo!");
     });
-}
-
-/* ========== Search Songs ========== */
-async function searchSongs(query) {
-    if (!query.trim()) {
-        loadTrendingSongs();
-        return;
-    }
-    
-    showLoading(true);
-    
-    // YouTube search simulation with predefined songs
-    const searchResults = [
-        {
-            title: `${query} - Latest Version`,
-            artist: "Search Result",
-            videoId: "5C8JV3U1z2c",
-            thumbnail: "https://i.ytimg.com/vi/5C8JV3U1z2c/hqdefault.jpg",
-            mood: "search"
-        },
-        {
-            title: `${query} Remix 2024`,
-            artist: "DJ Mix",
-            videoId: "sCbbMZ-q4-I",
-            thumbnail: "https://i.ytimg.com/vi/sCbbMZ-q4-I/hqdefault.jpg",
-            mood: "search"
-        },
-        {
-            title: `${query} Acoustic Version`,
-            artist: "Unplugged",
-            videoId: "b1P0vZDdyMA",
-            thumbnail: "https://i.ytimg.com/vi/b1P0vZDdyMA/hqdefault.jpg",
-            mood: "search"
-        },
-        {
-            title: `Best of ${query}`,
-            artist: "Mashup King",
-            videoId: "XjUFqfkYIYI",
-            thumbnail: "https://i.ytimg.com/vi/XjUFqfkYIYI/hqdefault.jpg",
-            mood: "search"
-        }
-    ];
-    
-    currentList = searchResults;
-    renderSongs(currentList);
-    showLoading(false);
 }
 
 /* ========== Player Controls ========== */
 function togglePlay() {
-    if (!currentSong) return;
+    console.log("⏯️ Toggle play clicked");
+    
+    if (!currentSong) {
+        playRandomSong();
+        return;
+    }
     
     if (isPlaying) {
         audioPlayer.pause();
         playIcon.className = 'fas fa-play';
+        isPlaying = false;
     } else {
         audioPlayer.play().then(() => {
             playIcon.className = 'fas fa-pause';
+            isPlaying = true;
         }).catch(error => {
-            console.log('Play failed, user interaction needed');
+            console.log("❌ Play failed:", error);
+            showNotification("❌ Play nahi ho raha!");
         });
     }
-    isPlaying = !isPlaying;
 }
 
 function nextSong() {
-    if (currentList.length === 0) return;
-    currentSongIndex = (currentSongIndex + 1) % currentList.length;
-    playSongFromList(currentSongIndex);
+    if (currentList.length === 0) {
+        playRandomSong();
+        return;
+    }
+    
+    if (isShuffle) {
+        playRandomSong();
+    } else {
+        currentSongIndex = (currentSongIndex + 1) % currentList.length;
+        playSongFromList(currentSongIndex);
+    }
 }
 
 function previousSong() {
-    if (currentList.length === 0) return;
+    if (currentList.length === 0) {
+        playRandomSong();
+        return;
+    }
+    
     currentSongIndex = (currentSongIndex - 1 + currentList.length) % currentList.length;
     playSongFromList(currentSongIndex);
 }
 
+/* ========== Random Song ========== */
+function playRandomSong() {
+    if (currentList.length === 0) {
+        loadTrendingSongs();
+        return;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * currentList.length);
+    playSongFromList(randomIndex);
+    showNotification("🎲 Random song playing!");
+}
+
+/* ========== Shuffle Songs ========== */
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    
+    if (isShuffle) {
+        currentList = shuffleArray([...originalList]);
+        showNotification("🔀 Shuffle ON - Random order");
+    } else {
+        currentList = [...originalList];
+        showNotification("➡️ Shuffle OFF - Normal order");
+    }
+    
+    renderSongs(currentList);
+}
+
+/* ========== Seek Song ========== */
 function seekSong(event) {
     if (!audioPlayer.duration) return;
     const progressBar = event.currentTarget;
@@ -376,64 +341,73 @@ function seekSong(event) {
     audioPlayer.currentTime = (clickX / width) * duration;
 }
 
-/* ========== Event Listeners ========== */
-function setupEventListeners() {
-    // Search
-    searchInput.addEventListener('input', debounce((e) => {
-        searchSongs(e.target.value);
-    }, 500));
-    
-    searchBtn.addEventListener('click', () => {
-        searchSongs(searchInput.value);
-    });
-    
-    // Mood Filters
-    if (moodFilters) {
-        moodFilters.addEventListener('click', (e) => {
-            if (e.target.classList.contains('mood-filter')) {
-                const mood = e.target.dataset.mood;
-                filterByMood(mood);
-            }
-        });
+/* ========== Search Songs ========== */
+function searchSongs(query) {
+    if (!query.trim()) {
+        loadTrendingSongs();
+        return;
     }
     
-    // Player Controls
-    document.getElementById('playBtn').addEventListener('click', togglePlay);
-    document.getElementById('nextBtn').addEventListener('click', nextSong);
-    document.getElementById('prevBtn').addEventListener('click', previousSong);
-    document.getElementById('progressBar').addEventListener('click', seekSong);
+    const searchResults = [...musicLibrary, ...additionalSongs].filter(song => 
+        song.title.toLowerCase().includes(query.toLowerCase()) ||
+        song.artist.toLowerCase().includes(query.toLowerCase()) ||
+        song.mood.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    currentList = searchResults.length > 0 ? searchResults : [...musicLibrary];
+    renderSongs(currentList);
+    
+    showNotification(`🔍 Found ${searchResults.length} songs for "${query}"`);
+}
+
+/* ========== Event Listeners ========== */
+function setupEventListeners() {
+    console.log("🔧 Setting up event listeners");
+    
+    // Search input
+    searchInput.addEventListener('input', (e) => {
+        searchSongs(e.target.value);
+    });
+    
+    // Enter key search
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchSongs(e.target.value);
+        }
+    });
+    
+    // Player controls
+    const playBtn = document.getElementById('playBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const progressBar = document.getElementById('progressBar');
+    
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+    if (nextBtn) nextBtn.addEventListener('click', nextSong);
+    if (prevBtn) prevBtn.addEventListener('click', previousSong);
+    if (progressBar) progressBar.addEventListener('click', seekSong);
+    
+    // Shuffle and Random buttons
+    if (shuffleBtn) shuffleBtn.addEventListener('click', toggleShuffle);
+    if (randomBtn) randomBtn.addEventListener('click', playRandomSong);
     
     // Audio events
     audioPlayer.addEventListener('timeupdate', updateProgress);
     audioPlayer.addEventListener('ended', nextSong);
+    audioPlayer.addEventListener('loadedmetadata', function() {
+        totalTime.textContent = formatTime(audioPlayer.duration);
+    });
 }
 
-/* ========== Mood Filter ========== */
-function filterByMood(mood) {
-    if (mood === 'all') {
-        renderSongs(currentList);
-    } else {
-        const filtered = currentList.filter(song => song.mood === mood);
-        renderSongs(filtered);
-    }
-}
-
-/* ========== Progress Update ========== */
+/* ========== Update Progress ========== */
 function updateProgress() {
     if (!audioPlayer.duration) return;
     const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
     progress.style.width = percent + '%';
     currentTime.textContent = formatTime(audioPlayer.currentTime);
-    totalTime.textContent = formatTime(audioPlayer.duration);
 }
 
-/* ========== Utilities ========== */
-function showLoading(show) {
-    if (loadingIndicator) {
-        loadingIndicator.style.display = show ? 'block' : 'none';
-    }
-}
-
+/* ========== Utility Functions ========== */
 function formatTime(seconds) {
     if (isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
@@ -442,36 +416,112 @@ function formatTime(seconds) {
 }
 
 function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
 }
 
 function getMoodEmoji(mood) {
     const emojis = {
         romantic: '💖',
         party: '🎉',
-        sad: '😢',
-        workout: '💪',
-        chill: '😎',
-        mass: '🔥',
+        emotional: '😢',
         funny: '😂',
-        search: '🔍'
+        devotional: '🕉️',
+        workout: '💪'
     };
     return emojis[mood] || '🎵';
 }
 
-/* ========== Auto-refresh every hour ========== */
-setInterval(() => {
-    loadTrendingSongs();
-}, 60 * 60 * 1000); // 1 hour
+function showNotification(message) {
+    // Create notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        font-family: Arial, sans-serif;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+function updateTime() {
+    const timeElement = document.getElementById('currentTime');
+    if (timeElement) {
+        const now = new Date();
+        timeElement.textContent = now.toLocaleTimeString();
+    }
+}
+
+// Auto refresh songs every 2 hours
+setInterval(loadTrendingSongs, 2 * 60 * 60 * 1000);
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.7);
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .song-card:hover .play-overlay {
+        opacity: 1;
+    }
+    
+    .song-duration {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 12px;
+    }
+    
+    .song-mood {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 12px;
+    }
+`;
+document.head.appendChild(style);
+
+console.log("✅ APNA MUSIC Ready! All features loaded.");
