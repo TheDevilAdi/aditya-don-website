@@ -6,70 +6,70 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const API_KEYS = [
-    "AIzaSyB2uQcXxBMyTmEw_ePWdV4cl7VFVo6ib3M",
-    "AIzaSyAn0lm3Wy1YCMCLrS7iAr2N5eam3h9vStc"
-];
+const JIOSAAVN_API = "https://saavn.me";
 
-let currentApiKeyIndex = 0;
-
+// Search Songs
 app.get('/api/search', async (req, res) => {
     try {
         const query = req.query.q;
-        const apiKey = API_KEYS[currentApiKeyIndex];
         
-        console.log('Searching for:', query);
-        console.log('Using API key:', currentApiKeyIndex);
-        
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(query)}+song&type=video&videoCategoryId=10&key=${apiKey}`;
-        
-        const response = await fetch(url);
+        const response = await fetch(`${JIOSAAVN_API}/search/songs?query=${query}&page=1&limit=15`);
         const data = await response.json();
         
-        if (data.error) {
-            currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
-            return res.status(400).json({ error: "API key issue" });
+        if (data.data && data.data.results) {
+            const songs = data.data.results.map(song => ({
+                id: { videoId: song.id },
+                snippet: {
+                    title: song.name,
+                    channelTitle: song.primaryArtists || "Unknown Artist",
+                    thumbnails: {
+                        medium: { url: song.image[2].link || song.image[1].link }
+                    }
+                }
+            }));
+            res.json(songs);
+        } else {
+            res.json([]);
         }
-        
-        res.json(data.items || []);
     } catch (error) {
         console.error('Search error:', error);
         res.status(500).json({ error: "Server error" });
     }
 });
 
+// Trending Songs
 app.get('/api/trending', async (req, res) => {
     try {
-        const apiKey = API_KEYS[currentApiKeyIndex];
-        
-        console.log('Loading trending songs');
-        console.log('Using API key:', currentApiKeyIndex);
-        
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=bollywood+trending+songs+2024&type=video&videoCategoryId=10&key=${apiKey}`;
-        
-        const response = await fetch(url);
+        const response = await fetch(`${JIOSAAVN_API}/search/songs?query=trending&page=1&limit=15`);
         const data = await response.json();
         
-        if (data.error) {
-            currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
-            return res.status(400).json({ error: "API key issue" });
+        if (data.data && data.data.results) {
+            const songs = data.data.results.map(song => ({
+                id: { videoId: song.id },
+                snippet: {
+                    title: song.name,
+                    channelTitle: song.primaryArtists || "Unknown Artist",
+                    thumbnails: {
+                        medium: { url: song.image[2].link || song.image[1].link }
+                    }
+                }
+            }));
+            res.json(songs);
+        } else {
+            res.json([]);
         }
-        
-        res.json(data.items || []);
     } catch (error) {
-        console.error('Trending songs error:', error);
+        console.error('Trending error:', error);
         res.status(500).json({ error: "Server error" });
     }
 });
 
 // Health Check
 app.get('/', (req, res) => {
-    res.json({ message: 'APNA MUSIC Backend is running!' });
+    res.json({ message: 'APNA MUSIC Backend with JioSaavn API!' });
 });
 
-// PORT CHANGE: 3000 se 10000
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`🎵 APNA MUSIC Backend running on port ${PORT}`);
-    console.log(`🔑 Using API key: ${currentApiKeyIndex}`);
 });
