@@ -1,39 +1,3 @@
-// script.js - APNA MUSIC Player
-const API_KEYS = [
-    "AIzaSyB2uQcXxBMyTmEw_ePWdV4cl7VFVo6ib3M",  // New API Key
-    "AIzaSyAn0lm3Wy1YCMCLrS7iAr2N5eam3h9vStc"   // Backup Key
-];
-
-let currentApiKeyIndex = 0;
-let player;
-let currentSongIndex = 0;
-let songs = [];
-let isPlaying = false;
-let currentTheme = 'dark';
-
-// YouTube Player API
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('audioPlayer', {
-        height: '0',
-        width: '0',
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    console.log('YouTube Player Ready');
-}
-
-function onPlayerStateChange(event) {
-    if (event.data == YT.PlayerState.ENDED) {
-        nextSong();
-    }
-    if (event.data == YT.PlayerState.PLAYING) {
-        updateProgressBar();
-    }
 }
 
 // Theme Management
