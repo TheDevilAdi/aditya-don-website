@@ -1,211 +1,10 @@
-// ---------- script.js (FINAL UPDATED) ----------
+// ---------- script.js (FINAL) ----------
 
 // ====== IMPORTANT ======
 // Replace the placeholder below with your NEW API key LOCALLY.
 // Do NOT commit the actual key to GitHub or share it publicly.
 // Delete the old leaked key from Google Cloud Console immediately.
 const YOUTUBE_API_KEY = 'AIzaSyCf61kjJf-3EW3AgDAtmoj7LgrPHM_uTgY';
-
-// ====== LYRICS SYSTEM ======
-let currentLyrics = [];
-let lyricsInterval = null;
-
-const lyricsDatabase = {
-    'kJQP7kiw5Fk': [
-        { time: 5, text: "Suniya suniya raatan te raatan de vich Tu..." },
-        { time: 10, text: "Dil mera dhadke tere liye" },
-        { time: 15, text: "Tere bina main kya karoon" },
-        { time: 20, text: "Saari raat jagoon tere liye" }
-    ],
-    '3JZ4pnNtyxQ': [
-        { time: 5, text: "Another song lyrics line 1" },
-        { time: 10, text: "Another song lyrics line 2" },
-        { time: 15, text: "Another song lyrics line 3" }
-    ]
-};
-
-function startLyricsHighlight(videoId) {
-    if (lyricsInterval) {
-        clearInterval(lyricsInterval);
-        lyricsInterval = null;
-    }
-    
-    currentLyrics = lyricsDatabase[videoId] || [];
-    
-    if (currentLyrics.length === 0) {
-        if (lyricsContent) {
-            lyricsContent.innerHTML = '<div style="text-align:center;color:var(--primary);padding:20px;">Lyrics not available for this song</div>';
-        }
-        return;
-    }
-    
-    displayLyrics();
-    lyricsInterval = setInterval(highlightCurrentLyric, 500);
-}
-
-function displayLyrics() {
-    if (!lyricsContent) return;
-    
-    let lyricsHTML = '<div class="lyrics-wrapper">';
-    currentLyrics.forEach((line, index) => {
-        lyricsHTML += `
-            <div class="lyrics-line" data-time="${line.time}" data-index="${index}">
-                ${line.text}
-            </div>
-        `;
-    });
-    lyricsHTML += '</div>';
-    lyricsContent.innerHTML = lyricsHTML;
-}
-
-function highlightCurrentLyric() {
-    if (!player || !player.getCurrentTime) return;
-    
-    const currentTime = player.getCurrentTime();
-    const lines = document.querySelectorAll('.lyrics-line');
-    let activeLineIndex = -1;
-    
-    for (let i = currentLyrics.length - 1; i >= 0; i--) {
-        if (currentTime >= currentLyrics[i].time) {
-            activeLineIndex = i;
-            break;
-        }
-    }
-    
-    lines.forEach((line, index) => {
-        if (index === activeLineIndex) {
-            line.classList.add('active');
-            line.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-            line.classList.remove('active');
-        }
-    });
-}
-
-function stopLyricsHighlight() {
-    if (lyricsInterval) {
-        clearInterval(lyricsInterval);
-        lyricsInterval = null;
-    }
-}
-
-// ====== SPARKLE BUTTON ======
-function createButtonSparkles() {
-    const playBtn = document.getElementById('playBtn');
-    if (!playBtn) return;
-    
-    const existingSparkles = playBtn.querySelectorAll('.btn-sparkle');
-    existingSparkles.forEach(sparkle => sparkle.remove());
-    
-    for (let i = 0; i < 12; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'btn-sparkle';
-        sparkle.style.setProperty('--angle', `${(i * 30)}deg`);
-        sparkle.style.animationDelay = `${Math.random() * 2}s`;
-        playBtn.appendChild(sparkle);
-    }
-}
-
-// ====== LOGIN SYSTEM ======
-let currentUser = null;
-
-function checkLoginStatus() {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateLoginUI();
-    }
-}
-
-function loginUser() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    if (email && password) {
-        currentUser = {
-            email: email,
-            name: email.split('@')[0]
-        };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        updateLoginUI();
-        showCongratulations();
-        playBeepSound();
-        return true;
-    }
-    alert('Please enter both email and password');
-    return false;
-}
-
-function updateLoginUI() {
-    const loginBtn = document.getElementById('loginBtn');
-    const userInfoDiv = document.getElementById('userInfo');
-    
-    if (currentUser && loginBtn && userInfoDiv) {
-        loginBtn.style.display = 'none';
-        userInfoDiv.style.display = 'block';
-        userInfoDiv.innerHTML = `
-            <span>👋 ${currentUser.email}</span>
-            <button onclick="logoutUser()" style="margin-left:10px; padding:5px 10px; border:none; border-radius:5px; background:#ff4757; color:white; cursor:pointer;">Logout</button>
-        `;
-    }
-}
-
-function logoutUser() {
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    const loginBtn = document.getElementById('loginBtn');
-    const userInfoDiv = document.getElementById('userInfo');
-    
-    if (loginBtn && userInfoDiv) {
-        loginBtn.style.display = 'block';
-        userInfoDiv.style.display = 'none';
-    }
-    playBeepSound();
-}
-
-function showCongratulations() {
-    const popup = document.createElement('div');
-    popup.innerHTML = `
-        <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;">
-            <div style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding:30px; border-radius:15px; text-align:center; color:white; max-width:400px; animation:popIn 0.5s ease-out;">
-                <h2>🎉 Congratulations!</h2>
-                <p>Thank you for Joining Aditya Music Web</p>
-                <button onclick="this.parentElement.parentElement.remove(); playBeepSound();" style="margin-top:15px; padding:10px 20px; border:none; border-radius:25px; background:#ffd700; color:black; font-weight:bold; cursor:pointer;">Continue</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(popup);
-}
-
-// ====== BEEP SOUND ======
-function playBeepSound() {
-    const beep = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==");
-    beep.play().catch(e => console.log('Beep sound not played'));
-}
-
-function addBeepToButtons() {
-    document.addEventListener('click', function(e) {
-        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-            playBeepSound();
-        }
-    });
-}
-
-// ====== SEARCH BOX EMOJI ======
-function updateSearchBox() {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.placeholder = "🔍 Search songs...";
-    }
-}
-
-// ====== INIT NEW FEATURES ======
-function initNewFeatures() {
-    checkLoginStatus();
-    addBeepToButtons();
-    updateSearchBox();
-    createButtonSparkles();
-}
 
 // Create sparkle background
 function createSparkles() {
@@ -267,7 +66,6 @@ function init() {
     document.addEventListener('click', () => { userInteracted = true; }, { once: true });
 
     loadTrendingSongs();
-    initNewFeatures(); // NEW FEATURES INIT
 }
 
 // Load trending songs with robust error handling
@@ -354,9 +152,6 @@ function playYouTubeSong(video, index) {
     const vid = (video.id && video.id.videoId) || video.videoId || null;
     if (!vid) { alert('Cannot play this item (no videoId).'); return; }
 
-    // Start lyrics system - NEW
-    startLyricsHighlight(vid);
-
     if (!player) {
         try {
             player = new YT.Player('audioPlayer', {
@@ -388,18 +183,10 @@ function playYouTubeSong(video, index) {
     }
 
     if (playIcon) playIcon.className = 'fas fa-pause';
-    createButtonSparkles(); // NEW - Sparkle effect
 }
 
 function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) {
-        stopLyricsHighlight(); // NEW
-        nextSong();
-    } else if (event.data === YT.PlayerState.PAUSED) {
-        stopLyricsHighlight(); // NEW
-    } else if (event.data === YT.PlayerState.PLAYING) {
-        // Lyrics auto-restart
-    }
+    if (event.data === YT.PlayerState.ENDED) nextSong();
 }
 
 // Search with same error handling
@@ -444,8 +231,6 @@ function togglePlay() {
         player.playVideo();
         if (playIcon) playIcon.className = 'fas fa-pause';
     }
-    createButtonSparkles(); // NEW - Sparkle effect
-    playBeepSound(); // NEW - Beep sound
 }
 
 function nextSong() {
