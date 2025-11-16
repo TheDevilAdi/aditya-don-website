@@ -1,10 +1,31 @@
-// ---------- script.js (FINAL) ----------
+// ---------- script.js (UPDATED WITH LYRICS & SPARKLE) ----------
 
 // ====== IMPORTANT ======
 // Replace the placeholder below with your NEW API key LOCALLY.
 // Do NOT commit the actual key to GitHub or share it publicly.
 // Delete the old leaked key from Google Cloud Console immediately.
 const YOUTUBE_API_KEY = 'AIzaSyCf61kjJf-3EW3AgDAtmoj7LgrPHM_uTgY';
+
+// Lyrics data structure (aap ise expand kar sakte hain)
+const lyricsDatabase = {
+    'kJQP7kiw5Fk': [
+        { time: 5, text: "Suniya suniya raatan te raatan de vich Tu..." },
+        { time: 10, text: "Dil mera dhadke tere liye" },
+        { time: 15, text: "Tere bina main kya karoon" },
+        { time: 20, text: "Saari raat jagoon tere liye" },
+        { time: 25, text: "Tu hai to mujhe kya chahiye" }
+    ],
+    '3JZ4pnNtyxQ': [
+        { time: 5, text: "Another song lyrics line 1" },
+        { time: 10, text: "Another song lyrics line 2" },
+        { time: 15, text: "Another song lyrics line 3" }
+    ],
+    'fRh_vgS2dFE': [
+        { time: 5, text: "Demo song lyrics line 1" },
+        { time: 10, text: "Demo song lyrics line 2" },
+        { time: 15, text: "Demo song lyrics line 3" }
+    ]
+};
 
 // Create sparkle background
 function createSparkles() {
@@ -18,6 +39,102 @@ function createSparkles() {
         sparkle.style.top = Math.random() * 100 + '%';
         sparkle.style.animationDelay = Math.random() * 3 + 's';
         sparkleBg.appendChild(sparkle);
+    }
+}
+
+// Create sparkle effect for play button
+function createButtonSparkles() {
+    const playBtn = document.getElementById('playBtn');
+    if (!playBtn) return;
+    
+    // Remove existing sparkles
+    const existingSparkles = playBtn.querySelectorAll('.btn-sparkle');
+    existingSparkles.forEach(sparkle => sparkle.remove());
+    
+    // Add new sparkles
+    for (let i = 0; i < 12; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'btn-sparkle';
+        sparkle.style.setProperty('--angle', `${(i * 30)}deg`);
+        sparkle.style.animationDelay = `${Math.random() * 2}s`;
+        playBtn.appendChild(sparkle);
+    }
+}
+
+// Lyrics highlight system
+let currentLyrics = [];
+let lyricsInterval = null;
+
+function startLyricsHighlight(videoId) {
+    // Clear existing interval
+    if (lyricsInterval) {
+        clearInterval(lyricsInterval);
+        lyricsInterval = null;
+    }
+    
+    // Get lyrics for current song
+    currentLyrics = lyricsDatabase[videoId] || [];
+    
+    if (currentLyrics.length === 0) {
+        if (lyricsContent) {
+            lyricsContent.innerHTML = '<div style="text-align:center;color:var(--primary);padding:20px;">Lyrics not available for this song</div>';
+        }
+        return;
+    }
+    
+    // Display all lyrics initially
+    displayLyrics();
+    
+    // Start checking current time
+    lyricsInterval = setInterval(highlightCurrentLyric, 500);
+}
+
+function displayLyrics() {
+    if (!lyricsContent) return;
+    
+    let lyricsHTML = '<div class="lyrics-wrapper">';
+    currentLyrics.forEach((line, index) => {
+        lyricsHTML += `
+            <div class="lyrics-line" data-time="${line.time}" data-index="${index}">
+                ${line.text}
+            </div>
+        `;
+    });
+    lyricsHTML += '</div>';
+    lyricsContent.innerHTML = lyricsHTML;
+}
+
+function highlightCurrentLyric() {
+    if (!player || !player.getCurrentTime) return;
+    
+    const currentTime = player.getCurrentTime();
+    const lines = document.querySelectorAll('.lyrics-line');
+    let activeLineIndex = -1;
+    
+    // Find the current active line
+    for (let i = currentLyrics.length - 1; i >= 0; i--) {
+        if (currentTime >= currentLyrics[i].time) {
+            activeLineIndex = i;
+            break;
+        }
+    }
+    
+    // Update highlights
+    lines.forEach((line, index) => {
+        if (index === activeLineIndex) {
+            line.classList.add('active');
+            // Smooth scroll to active line
+            line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            line.classList.remove('active');
+        }
+    });
+}
+
+function stopLyricsHighlight() {
+    if (lyricsInterval) {
+        clearInterval(lyricsInterval);
+        lyricsInterval = null;
     }
 }
 
@@ -60,6 +177,7 @@ const themeIcon = document.getElementById('themeIcon');
 // Init
 function init() {
     createSparkles();
+    createButtonSparkles();
     setupEventListeners();
 
     // For autoplay policy: detect first real user interaction
@@ -152,6 +270,9 @@ function playYouTubeSong(video, index) {
     const vid = (video.id && video.id.videoId) || video.videoId || null;
     if (!vid) { alert('Cannot play this item (no videoId).'); return; }
 
+    // Start lyrics system
+    startLyricsHighlight(vid);
+
     if (!player) {
         try {
             player = new YT.Player('audioPlayer', {
@@ -183,10 +304,21 @@ function playYouTubeSong(video, index) {
     }
 
     if (playIcon) playIcon.className = 'fas fa-pause';
+    createButtonSparkles(); // Refresh sparkle effect
 }
 
 function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) nextSong();
+    if (event.data === YT.PlayerState.ENDED) {
+        stopLyricsHighlight();
+        nextSong();
+    } else if (event.data === YT.PlayerState.PAUSED) {
+        // Pause lyrics highlighting when song is paused
+        stopLyricsHighlight();
+    } else if (event.data === YT.PlayerState.PLAYING) {
+        // Resume lyrics highlighting when song plays
+        const videoId = player.getVideoData().video_id;
+        startLyricsHighlight(videoId);
+    }
 }
 
 // Search with same error handling
@@ -231,6 +363,7 @@ function togglePlay() {
         player.playVideo();
         if (playIcon) playIcon.className = 'fas fa-pause';
     }
+    createButtonSparkles(); // Refresh sparkle effect on click
 }
 
 function nextSong() {
@@ -238,6 +371,7 @@ function nextSong() {
     currentSongIndex = (currentSongIndex + 1) % currentYouTubeResults.length;
     playYouTubeSong(currentYouTubeResults[currentSongIndex]);
 }
+
 function previousSong() {
     if (!currentYouTubeResults.length) return;
     currentSongIndex = (currentSongIndex - 1 + currentYouTubeResults.length) % currentYouTubeResults.length;
@@ -269,6 +403,7 @@ function showPage(page) {
     else if (page === 'search') { if (homePage) homePage.style.display = 'block'; }
     else if (page === 'library') { if (homePage) homePage.style.display = 'block'; loadTrendingSongs(); }
 }
+
 function toggleTheme() {
     document.body.classList.toggle('light-theme');
     if (themeIcon) themeIcon.className = document.body.classList.contains('light-theme') ? 'fas fa-sun' : 'fas fa-moon';
@@ -290,6 +425,11 @@ function setupEventListeners() {
         });
     }
     if (playBtn) playBtn.addEventListener('click', togglePlay);
+    
+    // Add hover effect for sparkle button
+    if (playBtn) {
+        playBtn.addEventListener('mouseenter', createButtonSparkles);
+    }
 }
 
 // DOM ready
